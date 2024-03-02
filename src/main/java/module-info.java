@@ -3,7 +3,10 @@ module com.example.aeroblitz {
     requires javafx.fxml;
     requires java.datatransfer;
     requires java.desktop;
+<<<<<<< HEAD
     requires javafx.media;
+=======
+>>>>>>> 1709435 (ggs)
 
 
     opens com.example.aeroblitz to javafx.fxml;
