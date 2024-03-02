@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--<?import javafx.geometry.Insets?>-->
+<!--<?import javafx.scene.control.Label?>-->
+<!--<?import javafx.scene.layout.VBox?>-->
+
+<!--<?import javafx.scene.control.Button?>-->
+<!--<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"-->
+<!--      fx:controller="com.example.aeroblitz.HelloController">-->
+<!--  <padding>-->
+<!--    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>-->
+<!--  </padding>-->
+
+<!--  <Label fx:id="welcomeText"/>-->
+<!--  <Button text="Hello!" onAction="#onHelloButtonClick"/>-->
+<!--</VBox>-->
+
+
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+  <!-- Background -->
+  <Rectangle width="800" height="600" fill="#0099ff" />
+
+  <!-- Air Hockey Table -->
+  <Rectangle x="50" y="50" width="700" height="500" fill="#00cc00" />
+
+  <!-- Goal posts -->
+  <Rectangle x="50" y="250" width="20" height="100" fill="#ffffff" />
+  <Rectangle x="730" y="250" width="20" height="100" fill="#ffffff" />
+
+  <!-- Players' strikers (you can customize the shape and color) -->
+  <Rectangle x="50" y="250" width="20" height="20" fill="#ff0000" />
+  <Rectangle x="730" y="250" width="20" height="20" fill="#ff0000" />
+</AnchorPane>
+
