@@ -42,6 +42,10 @@
           <version>21</version>
       </dependency>
   </dependencies>
+<<<<<<< HEAD
+=======
+
+>>>>>>> edfae3f (ggs)
   <build>
     <plugins>
       <plugin>

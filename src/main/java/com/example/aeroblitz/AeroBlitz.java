@@ -11,6 +11,7 @@ public class AeroBlitz extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         // Load the FXML file
+<<<<<<< HEAD
         //Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
         Parent root = FXMLLoader.load(getClass().getResource("startscene.fxml"));
 
@@ -25,6 +26,13 @@ public class AeroBlitz extends Application {
         // Set up the primary stage
         primaryStage.setTitle("AeroBlitz"); // Set the title of the window
         primaryStage.setScene(new Scene(root, 800, 600)); // Set the scene with  a specific width and height
+=======
+        Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+
+        // Set up the primary stage
+        primaryStage.setTitle("AeroBlitz"); // Set the title of the window
+        primaryStage.setScene(new Scene(root, 800, 600)); // Set the scene with a specific width and height
+>>>>>>> edfae3f (ggs)
         primaryStage.show(); // Display the window
     }
 

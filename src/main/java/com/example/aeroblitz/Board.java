@@ -1,5 +1,6 @@
 package com.example.aeroblitz;
 
+<<<<<<< HEAD
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -10,10 +11,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+=======
+import javafx.animation.AnimationTimer;
+import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+>>>>>>> edfae3f (ggs)
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+<<<<<<< HEAD
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -40,11 +48,29 @@ public class Board {
     private final Set<KeyCode> pressedKeys = new HashSet<>(); // for keyboard movements in striker2
 
     private  double STRIKER_SPEED = 2; // speed of the striker2
+=======
+
+import java.util.Random;
+
+// defines the state and components of the board and the game
+
+public class Board {
+
+    @FXML
+    private AnchorPane pane;
+
+    private final int GAME_WIDTH = 800; //adjust the size of the board
+    private final int GAME_HEIGHT = 600;
+    private final int BALL_DIAMETER = 10; //adjust the size of the ball
+
+
+>>>>>>> edfae3f (ggs)
     private double goalpos = 230;
 
     private Striker striker1;
     private Striker striker2;
     private Ball ball;
+<<<<<<< HEAD
     private slow_ball slowball;
 
     private int ballVelocity = 5; // Initial ball velocity
@@ -52,6 +78,9 @@ public class Board {
     private boolean isSlowed = false;
     private int strikerSize = 100; // adjust the size of the striker, indicates the diameter
     private double strokeWidth = 0;
+=======
+    private int strikerSize = 100; // adjust the size of the striker, indicates the diameter
+>>>>>>> edfae3f (ggs)
 
     private int MAX_BOUNCE_SPEED = 2; // determines the speed of the ball when the striker hits it
 
@@ -61,6 +90,7 @@ public class Board {
     private double startTime; // initial time of the mouse when it is pressed
 
     private Canvas canvas;
+<<<<<<< HEAD
     private GraphicsContext gc, gc1;
     private Score score;
 
@@ -87,10 +117,16 @@ public class Board {
 
 
 
+=======
+    private GraphicsContext gc;
+    private Score score;
+
+>>>>>>> edfae3f (ggs)
     private final AnimationTimer gameLoop = new AnimationTimer() { //game loop for running updates in the board
         @Override
         public void handle(long now) {
 
+<<<<<<< HEAD
             drawTrail();
 
             if (ballVelocity == 2) {
@@ -172,6 +208,14 @@ public class Board {
 
 
             }
+=======
+            // Update the position of the ball
+            ball.move();
+            ball.draw();
+
+            // Check for collisions
+            checkCollision();
+>>>>>>> edfae3f (ggs)
         }
     };
 
@@ -180,6 +224,7 @@ public class Board {
 
         canvas = new Canvas(GAME_WIDTH, GAME_HEIGHT); // Adjust the size as needed
 
+<<<<<<< HEAD
         // Initialize blast effect transition
 //        blastTransition.setToX(0);
 //        blastTransition.setToY(0);
@@ -194,6 +239,11 @@ public class Board {
 //        __timer = new ttimer(30, this); // Initialize ttimer with 30 seconds
 
 
+=======
+        gc = canvas.getGraphicsContext2D();
+        pane.getChildren().add(canvas);
+
+>>>>>>> edfae3f (ggs)
         score = new Score(GAME_WIDTH, GAME_HEIGHT); // Pass the dimensions of your game window
         score.setPlayerScores(0, 0); // Set initial scores
 
@@ -205,15 +255,23 @@ public class Board {
 
 
         // Initialize the board
+<<<<<<< HEAD
         newStriker(100, 300, Color.RED, 1, striker1); // initial position of the strikers in the board
         newStriker(700, 300, Color.GREEN,2, striker2);
         newBall();
         newslowBall();// initial position of the ball, it will start from any random position in the middle line of the board
+=======
+        newStriker(100, 300, Color.RED, striker1); // initial position of the strikers in the board
+        newStriker(700, 300, Color.GREEN, striker2);
+        newBall(); // initial position of the ball, it will start from any random position in the middle line of the board
+        ;
+>>>>>>> edfae3f (ggs)
 
         // Start the game loop
         gameLoop.start();
     }
 
+<<<<<<< HEAD
 
     //motion trail is turned off for now
 
@@ -226,6 +284,8 @@ public class Board {
 
     }
 
+=======
+>>>>>>> edfae3f (ggs)
     private void draw_scoreboard() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
@@ -242,6 +302,7 @@ public class Board {
         ball = new Ball((GAME_WIDTH / 2) - (BALL_DIAMETER / 2), random.nextInt((GAME_HEIGHT) - (BALL_DIAMETER)), BALL_DIAMETER, c);
         pane.getChildren().add(c);
         ball.draw();
+<<<<<<< HEAD
 
     }
 
@@ -272,6 +333,17 @@ public class Board {
         double radius = strikerSize / 3.0;
 
         striker.setID(id);
+=======
+    }
+
+    public void newStriker(int x, int y, Color color, Striker striker) {
+        Circle c = new Circle();
+        c.setFill(color);
+        c.setStroke(Color.WHITE);
+
+        double radius = strikerSize / 3.0;
+
+>>>>>>> edfae3f (ggs)
         striker.setX(x);
         striker.setY(y);
         striker.setColor(color);
@@ -281,6 +353,7 @@ public class Board {
 
         striker.draw(); //draw the striker
 
+<<<<<<< HEAD
 //        if(striker.getID() == 2) {
         if(true) {
 
@@ -540,15 +613,28 @@ public class Board {
 
     }
 
+=======
+        // Setting mouse control
+        c.setOnMousePressed(event -> pressed(event, striker));
+        c.setOnMouseDragged(event -> dragged(event, striker));
+        c.setOnMouseReleased(event -> released(event, striker));
+    }
+
+    //Collision physics
+
+>>>>>>> edfae3f (ggs)
     public void checkCollision() {
 
 
         int diameter = strikerSize/2;
         int ball_radius = BALL_DIAMETER/2;
+<<<<<<< HEAD
         int rectWidth = 50;
         int rectHeight = 150;
         int rectX = 0; // Positioned on the left wall
         int rectY = (GAME_HEIGHT - rectHeight) / 2;
+=======
+>>>>>>> edfae3f (ggs)
 
 
         // left side Boundary checking for striker1
@@ -600,14 +686,29 @@ public class Board {
         }
 
         // Ball bounce off the left and right edges  & setting the goalpost
+<<<<<<< HEAD
        if (ball.getX() <= 0 && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier) {
 
             score.player2++;
 
+=======
+        if (ball.getX() <= 0 && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
+
+                score.player2++;
+                resetPositions();
+                draw_scoreboard();
+                System.out.println(score.player2);
+
+        }
+        else if (ball.getX() >= (GAME_WIDTH - BALL_DIAMETER) && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
+
+            score.player1++;
+>>>>>>> edfae3f (ggs)
             resetPositions();
             draw_scoreboard();
             System.out.println(score.player1);
 
+<<<<<<< HEAD
         }
 
         if (ball.getX() - ball_radius <= rectX + rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrier) {
@@ -639,6 +740,10 @@ public class Board {
 
         }else if (ball.getX() <= 0 || ball.getX() >= (GAME_WIDTH - BALL_DIAMETER)) {
             ball.setXDirection(-ball.getXVelocity());
+=======
+        }else if (ball.getX() <= 0 || ball.getX() >= (GAME_WIDTH - BALL_DIAMETER)) {
+                ball.setXDirection(-ball.getXVelocity());
+>>>>>>> edfae3f (ggs)
         }
 
 
@@ -680,6 +785,7 @@ public class Board {
         }
 
         // Collisions with the strikers to the ball
+<<<<<<< HEAD
 //        if (intersects(ball, striker1) || intersects(ball, striker2)) {
 
         // Collisions with the strikers
@@ -724,10 +830,39 @@ public class Board {
 
         }
 //        }
+=======
+        if (intersects(ball, striker1) || intersects(ball, striker2)) {
+
+            // Collisions with the strikers
+            if (intersects(ball, striker1) || intersects(ball, striker2)) {
+
+                double relativeCollisionX = ball.getX() - striker1.getX();
+                double relativeCollisionY = ball.getY() - striker1.getY();
+
+                // Calculate the angle of collision
+                double collisionAngle = Math.atan2(relativeCollisionY, relativeCollisionX);
+
+                // Determine the direction of the striker's movement
+                double strikerMovementDirection = Math.atan2(striker1.getSpeedY(), striker1.getSpeedX());
+
+                // Calculate the angle between the striker's movement direction and the collision angle
+                double angleDifference = collisionAngle - strikerMovementDirection;
+
+                // Adjust the direction of the ball based on the angle difference
+                double newBallXVelocity = Math.cos(angleDifference) * ball.getXVelocity() - Math.sin(angleDifference) * ball.getYVelocity();
+                double newBallYVelocity = Math.sin(angleDifference) * ball.getXVelocity() + Math.cos(angleDifference) * ball.getYVelocity();
+
+                // Update the ball's velocity
+                ball.setXDirection(newBallXVelocity);
+                ball.setYDirection(newBallYVelocity);
+            }
+        }
+>>>>>>> edfae3f (ggs)
 
 
     }
 
+<<<<<<< HEAD
     // game restart after winning 1
     @FXML
     private void restartGame(MouseEvent event) {
@@ -752,6 +887,8 @@ public class Board {
     }
 
 
+=======
+>>>>>>> edfae3f (ggs)
     private void resetPositions() {
         // Remove previously drawn ball and strikers from the pane
         pane.getChildren().remove(ball.getCircle());
@@ -759,8 +896,13 @@ public class Board {
         pane.getChildren().remove(striker2.getCircle());
 
         // Reset positions for striker1 and striker2
+<<<<<<< HEAD
         newStriker(100, 300, Color.RED,1, striker1); // initial position of the strikers in the board
         newStriker(700, 300, Color.GREEN,2, striker2);
+=======
+        newStriker(100, 300, Color.RED, striker1); // initial position of the strikers in the board
+        newStriker(700, 300, Color.GREEN, striker2);
+>>>>>>> edfae3f (ggs)
 
         // Reset ball position
         newBall();
@@ -780,6 +922,7 @@ public class Board {
 //        return strikerCircle.getBoundsInParent().intersects(ballCircle.getBoundsInParent()) || ballCircle.getBoundsInParent().intersects(strikerCircle.getBoundsInParent());
     }
 
+<<<<<<< HEAD
     private boolean intersectsslow(slow_ball slowball, Striker striker) {
 
         Circle ballCircle = slowball.getCircle();
@@ -794,6 +937,8 @@ public class Board {
 //        return strikerCircle.getBoundsInParent().intersects(ballCircle.getBoundsInParent()) || ballCircle.getBoundsInParent().intersects(strikerCircle.getBoundsInParent());
     }
 
+=======
+>>>>>>> edfae3f (ggs)
     private boolean intersects(Striker striker1, Striker striker2) {
 
 //        Circle ballCircle = ball.getCircle();
@@ -851,6 +996,7 @@ public class Board {
         startY = event.getSceneY();
         startTime = System.nanoTime();
     }
+<<<<<<< HEAD
 
     @FXML
     private void handleSlowOpponentButtonClick(ActionEvent actionEvent) {
@@ -948,4 +1094,6 @@ public class Board {
         }
     }
 
+=======
+>>>>>>> edfae3f (ggs)
 }
