@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-//<<<<<<< HEAD
+
 ////package com.example.aeroblitz;
 ////
 ////import javafx.scene.input.KeyEvent;
@@ -117,8 +116,6 @@
 //////    }
 ////}
 //=======
-=======
->>>>>>> edfae3f (ggs)
 //package com.example.aeroblitz;
 //
 //import javafx.scene.input.KeyEvent;
@@ -235,7 +232,4 @@
 ////    public void keyPressed(java.awt.event.KeyEvent e) {
 ////    }
 //}
-<<<<<<< HEAD
-//>>>>>>> 1709435 (ggs)
-=======
->>>>>>> edfae3f (ggs)
+

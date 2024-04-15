@@ -1,6 +1,5 @@
 package com.example.aeroblitz;
 
-<<<<<<< HEAD
 
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -23,35 +22,13 @@ public class Ball extends Group {
     private List<Node> motionTrail;
     private int maxTrailLength = 10; // Maximum number of trail segments
     private Color trailColor = Color.rgb(255, 0, 0, 0.3); // Trail color with transparency
-=======
-import javafx.scene.Node;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.effect.DropShadow;
-
-import java.util.Random;
-
-public class Ball extends Node {
-    private  double x;
-    private  double y;
-    private  double radius;
-    private Circle c;
-    private DropShadow dropShadow;
-
->>>>>>> edfae3f (ggs)
 
     Random random;
     double xVelocity;
     double yVelocity;
-<<<<<<< HEAD
-    double initialSpeed = 5;
+    int initialSpeed = 5;
 
     public Ball(double x, double y, double radius, Circle c) {
-=======
-    int initialSpeed = 3;
-    public Ball(double x, double y, double radius, Circle c)
-    {
->>>>>>> edfae3f (ggs)
         this.x = x;
         this.y = y;
         this.radius = radius;
@@ -59,7 +36,6 @@ public class Ball extends Node {
 
         random = new Random();
 
-<<<<<<< HEAD
         // Create a DropShadow effect
         dropShadow = new DropShadow();
         dropShadow.setRadius(10);
@@ -72,29 +48,8 @@ public class Ball extends Node {
         // Initialize velocities
         int randomXDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for x velocity
         int randomYDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for y velocity
-=======
-
-        // Create a DropShadow effect
-        dropShadow = new DropShadow();
-        dropShadow.setRadius(10);
-        dropShadow.setColor(javafx.scene.paint.Color.BLACK);
-        c.setEffect(dropShadow);
-
-
-        //for x
-        int randomXDirection = random.nextInt(2); //setting a random direction for the ball
-        if(randomXDirection == 0)
-        {
-            randomXDirection--;
-        }
->>>>>>> edfae3f (ggs)
         setXDirection(randomXDirection * initialSpeed);
         setYDirection(randomYDirection * initialSpeed);
-<<<<<<< HEAD
-=======
-
-
->>>>>>> edfae3f (ggs)
     }
 
     void setYDirection(double randomYDirection) {
@@ -105,7 +60,6 @@ public class Ball extends Node {
         xVelocity = randomXDirection;
     }
 
-<<<<<<< HEAD
     public void move() {
 
         // Add motion trail segment
@@ -118,10 +72,6 @@ public class Ball extends Node {
         }
 
         // Update ball position
-=======
-    public void move()
-    {
->>>>>>> edfae3f (ggs)
         x += xVelocity;
         y += yVelocity;
 
@@ -138,7 +88,6 @@ public class Ball extends Node {
         }
     }
 
-<<<<<<< HEAD
     public void setX(double x) {
         this.x = x;
     }
@@ -169,59 +118,6 @@ public class Ball extends Node {
         return xVelocity;
     }
 
-    public void setxVelocity(double speed)
-    {
-        xVelocity=speed;
-    }
-    public void setyVelocity(double speed)
-    {
-        yVelocity=speed;
-    }
-
-=======
-    public void setX(double x)
-    {
-        this.x = x;
-    }
-
-    public void setY(double y)
-    {
-        this.y = y;
-    }
-
-    public double getX()
-    {
-        return x;
-    }
-
-    public double getY()
-    {
-        return y;
-    }
-
-    public void setColor(javafx.scene.paint.Color color)
-    {
-        c.setFill(color);
-
-    }
-
-    public void draw()
-    {
-        c.setRadius(radius);
-        c.setTranslateX(x);
-        c.setTranslateY(y);
-    }
-
-    @Override
-    public Node getStyleableNode() {
-        return super.getStyleableNode();
-    }
-
-    public double getXVelocity() {
-        return xVelocity;
-    }
-
->>>>>>> edfae3f (ggs)
     public double getYVelocity() {
         return yVelocity;
     }
@@ -229,38 +125,48 @@ public class Ball extends Node {
     public Circle getCircle() {
         return c;
     }
-<<<<<<< HEAD
 
     public double getradius() {
         return  radius;
     }
-
-    public void setspeed(double speed)
-    {
-        initialSpeed=speed;
-    }
-=======
->>>>>>> edfae3f (ggs)
 }
 
 
-//=======
-//import java.awt.*;
-//import java.awt.event.*;
-//import java.util.*;
-//import javax.swing.*;
+//import javafx.scene.Node;
+//import javafx.scene.paint.Color;
+//import javafx.scene.shape.Circle;
+//import javafx.scene.effect.DropShadow;
 //
-//public class Ball extends Rectangle {
+//import java.util.Random;
+//
+//public class Ball extends Node {
+//    private  double x;
+//    private  double y;
+//    private  double radius;
+//    private Circle c;
+//    private DropShadow dropShadow;
+//
 //
 //    Random random;
-//    int xVelocity;
-//    int yVelocity;
+//    double xVelocity;
+//    double yVelocity;
 //    int initialSpeed = 3;
-//
-//    Ball(int x, int y, int width, int height)
+//    public Ball(double x, double y, double radius, Circle c)
 //    {
-//        super(x,y,width,height);
+//        this.x = x;
+//        this.y = y;
+//        this.radius = radius;
+//        this.c = c;
+//
 //        random = new Random();
+//
+//
+//        // Create a DropShadow effect
+//        dropShadow = new DropShadow();
+//        dropShadow.setRadius(10);
+//        dropShadow.setColor(javafx.scene.paint.Color.BLACK);
+//        c.setEffect(dropShadow);
+//
 //
 //        //for x
 //        int randomXDirection = random.nextInt(2); //setting a random direction for the ball
@@ -278,16 +184,15 @@ public class Ball extends Node {
 //        }
 //        setYDirection(randomYDirection * initialSpeed);
 //
+//
 //    }
 //
-//    public void setXDirection(int randomXDirection)
-//    {
-//        xVelocity = randomXDirection;
-//    }
-//
-//    public void setYDirection(int randomYDirection)
-//    {
+//    void setYDirection(double randomYDirection) {
 //        yVelocity = randomYDirection;
+//    }
+//
+//    void setXDirection(double randomXDirection) {
+//        xVelocity = randomXDirection;
 //    }
 //
 //    public void move()
@@ -296,11 +201,53 @@ public class Ball extends Node {
 //        y += yVelocity;
 //    }
 //
-//    public void draw(Graphics g)
+//    public void setX(double x)
 //    {
-//        g.setColor(Color.YELLOW);
-//        g.fillOval(x,y,width,height);
+//        this.x = x;
 //    }
 //
+//    public void setY(double y)
+//    {
+//        this.y = y;
+//    }
+//
+//    public double getX()
+//    {
+//        return x;
+//    }
+//
+//    public double getY()
+//    {
+//        return y;
+//    }
+//
+//    public void setColor(javafx.scene.paint.Color color)
+//    {
+//        c.setFill(color);
+//
+//    }
+//
+//    public void draw()
+//    {
+//        c.setRadius(radius);
+//        c.setTranslateX(x);
+//        c.setTranslateY(y);
+//    }
+//
+//    @Override
+//    public Node getStyleableNode() {
+//        return super.getStyleableNode();
+//    }
+//
+//    public double getXVelocity() {
+//        return xVelocity;
+//    }
+//
+//    public double getYVelocity() {
+//        return yVelocity;
+//    }
+//
+//    public Circle getCircle() {
+//        return c;
+//    }
 //}
-//>>>>>>> 1709435 (ggs)

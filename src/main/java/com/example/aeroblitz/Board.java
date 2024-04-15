@@ -1,45 +1,30 @@
 package com.example.aeroblitz;
 
-<<<<<<< HEAD
-import javafx.animation.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-=======
-import javafx.animation.AnimationTimer;
-import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
->>>>>>> edfae3f (ggs)
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-<<<<<<< HEAD
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.util.*;
+
+// defines the state and components of the board and the game
 
 public class Board {
 
 
     @FXML
     private AnchorPane pane;
-
-    @FXML
-    private Rectangle player1goalps,player2goalps;
-
-    @FXML
-    private Button slowOpponentButton;
-    private boolean isOpponentStrikerFrozen=false;
 
     private final int GAME_WIDTH = 800; //adjust the size of the board
     private final int GAME_HEIGHT = 600;
@@ -48,39 +33,13 @@ public class Board {
     private final Set<KeyCode> pressedKeys = new HashSet<>(); // for keyboard movements in striker2
 
     private  double STRIKER_SPEED = 2; // speed of the striker2
-=======
-
-import java.util.Random;
-
-// defines the state and components of the board and the game
-
-public class Board {
-
-    @FXML
-    private AnchorPane pane;
-
-    private final int GAME_WIDTH = 800; //adjust the size of the board
-    private final int GAME_HEIGHT = 600;
-    private final int BALL_DIAMETER = 10; //adjust the size of the ball
-
-
->>>>>>> edfae3f (ggs)
     private double goalpos = 230;
 
     private Striker striker1;
     private Striker striker2;
     private Ball ball;
-<<<<<<< HEAD
-    private slow_ball slowball;
-
-    private int ballVelocity = 5; // Initial ball velocity
-    private int slowVelocity = 2;
-    private boolean isSlowed = false;
     private int strikerSize = 100; // adjust the size of the striker, indicates the diameter
     private double strokeWidth = 0;
-=======
-    private int strikerSize = 100; // adjust the size of the striker, indicates the diameter
->>>>>>> edfae3f (ggs)
 
     private int MAX_BOUNCE_SPEED = 2; // determines the speed of the ball when the striker hits it
 
@@ -90,7 +49,6 @@ public class Board {
     private double startTime; // initial time of the mouse when it is pressed
 
     private Canvas canvas;
-<<<<<<< HEAD
     private GraphicsContext gc, gc1;
     private Score score;
 
@@ -113,109 +71,56 @@ public class Board {
 
     private boolean gameEnded = false;
 
-    private boolean goalpostbarrier=false;
 
 
-
-=======
-    private GraphicsContext gc;
-    private Score score;
-
->>>>>>> edfae3f (ggs)
     private final AnimationTimer gameLoop = new AnimationTimer() { //game loop for running updates in the board
         @Override
         public void handle(long now) {
 
-<<<<<<< HEAD
             drawTrail();
 
-            if (ballVelocity == 2) {
-
-
-                slowball.move();
-                slowball.draw();
-
-
-                // Update motion trail for the ball
-                updateMotionTrail(ball);
-
-                // Check for collisions
-                checkCollisionslow();
-
-                System.out.println("time " + score.getTime());
-
-                if (score.getTime() == 0) {
-                    gameEnded = true;
-                    gameLoop.stop();
-                    score.pauseTimer();
-
-                    if (score.player1 > score.player2) {
-                        winText.setText(String.format("Player 1 wins!!"));
-                        winText.setVisible(true); // Hide the win text
-                    } else if (score.player2 > score.player1) {
-                        winText.setText(String.format("Player 2 wins!!"));
-                        winText.setVisible(true); // Hide the win text
-                    } else {
-                        winText.setText(String.format("Its a Draw!!"));
-                        winText.setVisible(true); // Hide the win text
-                    }
-
-//                score.setTime(30);
-//                resetPositions();
-//                draw_scoreboard();
-                    System.out.println(score.player1);
-                    System.out.println(score.player2);
-
-                }
-            } else {
-
-                ball.getCircle().setVisible(true);
-                // Update the position of the ball
-                ball.move();
-                ball.draw();
-
-                // Update motion trail for the ball
-                updateMotionTrail(ball);
-
-                // Check for collisions
-                checkCollision();
-
-                System.out.println("time " + score.getTime());
-
-                if (score.getTime() == 0) {
-                    gameEnded = true;
-                    gameLoop.stop();
-                    score.pauseTimer();
-
-                    if (score.player1 > score.player2) {
-                        winText.setText(String.format("Player 1 wins!!"));
-                        winText.setVisible(true); // Hide the win text
-                    } else if (score.player2 > score.player1) {
-                        winText.setText(String.format("Player 2 wins!!"));
-                        winText.setVisible(true); // Hide the win text
-                    } else {
-                        winText.setText(String.format("Its a Draw!!"));
-                        winText.setVisible(true); // Hide the win text
-                    }
-
-//                score.setTime(30);
-//                resetPositions();
-//                draw_scoreboard();
-                    System.out.println(score.player1);
-                    System.out.println(score.player2);
-
-                }
-
-
-            }
-=======
             // Update the position of the ball
             ball.move();
             ball.draw();
 
+            // Update motion trail for the ball
+            updateMotionTrail(ball);
+
             // Check for collisions
             checkCollision();
->>>>>>> edfae3f (ggs)
+
+            System.out.println("time "+score.getTime());
+
+            if(score.getTime() == 0)
+            {
+                gameEnded = true;
+                gameLoop.stop();
+                score.pauseTimer();
+
+                if(score.player1 > score.player2) {
+                    winText.setText(String.format("Player 1 wins!!"));
+                    winText.setVisible(true); // Hide the win text
+                }
+                else if(score.player2 > score.player1) {
+                    winText.setText(String.format("Player 2 wins!!"));
+                    winText.setVisible(true); // Hide the win text
+                }
+                else
+                {
+                    winText.setText(String.format("Its a Draw!!"));
+                    winText.setVisible(true); // Hide the win text
+                }
+
+//                score.setTime(30);
+//                resetPositions();
+//                draw_scoreboard();
+                System.out.println(score.player1);
+                System.out.println(score.player2);
+
+            }
+
+
+
         }
     };
 
@@ -224,7 +129,6 @@ public class Board {
 
         canvas = new Canvas(GAME_WIDTH, GAME_HEIGHT); // Adjust the size as needed
 
-<<<<<<< HEAD
         // Initialize blast effect transition
 //        blastTransition.setToX(0);
 //        blastTransition.setToY(0);
@@ -239,11 +143,6 @@ public class Board {
 //        __timer = new ttimer(30, this); // Initialize ttimer with 30 seconds
 
 
-=======
-        gc = canvas.getGraphicsContext2D();
-        pane.getChildren().add(canvas);
-
->>>>>>> edfae3f (ggs)
         score = new Score(GAME_WIDTH, GAME_HEIGHT); // Pass the dimensions of your game window
         score.setPlayerScores(0, 0); // Set initial scores
 
@@ -255,37 +154,63 @@ public class Board {
 
 
         // Initialize the board
-<<<<<<< HEAD
         newStriker(100, 300, Color.RED, 1, striker1); // initial position of the strikers in the board
         newStriker(700, 300, Color.GREEN,2, striker2);
-        newBall();
-        newslowBall();// initial position of the ball, it will start from any random position in the middle line of the board
-=======
-        newStriker(100, 300, Color.RED, striker1); // initial position of the strikers in the board
-        newStriker(700, 300, Color.GREEN, striker2);
         newBall(); // initial position of the ball, it will start from any random position in the middle line of the board
-        ;
->>>>>>> edfae3f (ggs)
 
         // Start the game loop
         gameLoop.start();
     }
 
-<<<<<<< HEAD
 
     //motion trail is turned off for now
 
     private void drawTrail() {
-
+//        gc1.setStroke(Color.rgb(255, 255, 255, 0.5)); // Set the color and transparency of the motion trail
+//        gc1.setLineWidth(2); // Set the width of the motion trail lines
+//
+//        for (Line segment : motionTrail) {
+//            gc1.strokeLine(segment.getStartX(), segment.getStartY(), segment.getEndX(), segment.getEndY());
+//        }
     }
 
     private void updateMotionTrail(Ball ball) {
 
-
+//        double trailStartX = ball.getX() + ball.getradius(); // Calculate the x-coordinate of the trail start
+//        double trailStartY = ball.getY() + ball.getradius(); // Calculate the y-coordinate of the trail start
+//
+//        // Calculate the end point of the trail segment
+//        double trailEndX = ball.getX() - ball.getXVelocity() + ball.getradius();
+//        double trailEndY = ball.getY() - ball.getYVelocity() + ball.getradius();
+//
+//        Line trailSegment = new Line(trailStartX, trailStartY, trailEndX, trailEndY);
+//        trailSegment.setStroke(Color.CRIMSON);
+//
+//        // Set initial opacity of the trail segment
+//        trailSegment.setOpacity(1.0);
+//
+//        // Fade away the trail segment over time
+//        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), trailSegment);
+//        fadeOut.setToValue(0.0); // Fade to fully transparent
+//        // Set the action to be performed when the fade-out animation completes
+//        fadeOut.setOnFinished(event -> {
+//            // Remove the trail segment from the scene after fading out completely
+//            pane.getChildren().remove(trailSegment);
+//            // Remove the trail segment from the motion trail list
+//            motionTrail.remove(trailSegment);
+//        });
+//
+//        fadeOut.play();
+//
+//        motionTrail.add(trailSegment);
+//
+//        // Remove oldest segment if the trail is too long
+//        if (motionTrail.size() > maxTrailLength) {
+//            // Remove the oldest trail segment from the scene
+//            pane.getChildren().remove(motionTrail.remove(0));
+//        }
     }
 
-=======
->>>>>>> edfae3f (ggs)
     private void draw_scoreboard() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
@@ -302,20 +227,6 @@ public class Board {
         ball = new Ball((GAME_WIDTH / 2) - (BALL_DIAMETER / 2), random.nextInt((GAME_HEIGHT) - (BALL_DIAMETER)), BALL_DIAMETER, c);
         pane.getChildren().add(c);
         ball.draw();
-<<<<<<< HEAD
-
-    }
-
-    public void newslowBall() {
-
-        Circle c = new Circle(); // before passing it to the ball constructor first we are creating a circle
-        c.setFill(Color.YELLOW);
-        c.setStroke(Color.WHITE);
-
-        Random random = new Random();
-        slowball = new slow_ball(ball.getX(), ball.getY(), BALL_DIAMETER, c);
-        pane.getChildren().add(c);
-        //slowball.draw();
 
     }
 
@@ -333,17 +244,6 @@ public class Board {
         double radius = strikerSize / 3.0;
 
         striker.setID(id);
-=======
-    }
-
-    public void newStriker(int x, int y, Color color, Striker striker) {
-        Circle c = new Circle();
-        c.setFill(color);
-        c.setStroke(Color.WHITE);
-
-        double radius = strikerSize / 3.0;
-
->>>>>>> edfae3f (ggs)
         striker.setX(x);
         striker.setY(y);
         striker.setColor(color);
@@ -353,7 +253,6 @@ public class Board {
 
         striker.draw(); //draw the striker
 
-<<<<<<< HEAD
 //        if(striker.getID() == 2) {
         if(true) {
 
@@ -433,208 +332,11 @@ public class Board {
 
     //Collision physics
 
-    public void checkCollisionslow() {
-
-
-        int diameter = strikerSize/2;
-        int ball_radius = BALL_DIAMETER/2;
-
-        int rectWidth = 50;
-        int rectHeight = 150;
-        int rectX = 0; // Positioned on the left wall
-        int rectY = (GAME_HEIGHT - rectHeight) / 2;
-
-
-        // left side Boundary checking for striker1
-        if (striker1.getX() <= diameter) {
-            striker1.setX(diameter);
-            striker1.draw();
-        }
-
-        if (striker1.getX() >= (GAME_WIDTH - (diameter))) {
-            striker1.setX(GAME_WIDTH - (diameter));
-            striker1.draw();
-        }
-
-        if (striker1.getY() <= diameter) {
-            striker1.setY(diameter);
-            striker1.draw();
-        }
-
-        if (striker1.getY() >= (GAME_HEIGHT - (diameter))) {
-            striker1.setY(GAME_HEIGHT - (diameter));
-            striker1.draw();
-        }
-
-
-        // Boundary checking for striker2
-        if (striker2.getX() <= diameter) {
-            striker2.setX(diameter);
-            striker2.draw();
-        }
-
-        if (striker2.getX() >= (GAME_WIDTH - (diameter))) {
-            striker2.setX(GAME_WIDTH - (diameter));
-            striker2.draw();
-        }
-
-        if (striker2.getY() <= diameter) {
-            striker2.setY(diameter);
-            striker2.draw();
-        }
-
-        if (striker2.getY() >= (GAME_HEIGHT - (diameter))) {
-            striker2.setY(GAME_HEIGHT - (diameter));
-            striker2.draw();
-        }
-
-        // Ball bounce off the top and bottom edges
-        if (slowball.getY() <= 0 || slowball.getY() >= (GAME_HEIGHT - BALL_DIAMETER)) {
-            slowball.setYDirection(-slowball.getYVelocity());
-        }
-
-        // Ball bounce off the left and right edges  & setting the goalpost
-        if (slowball.getX() <= 0 && slowball.getY() >= (goalpos+ BALL_DIAMETER) && slowball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
-
-            score.player2++;
-
-//                if(score.player2 > score.player1)
-//                if(score.getTime() == 0)
-//                {
-//                    gameEnded = true;
-//                    gameLoop.stop();
-//                    winText.setText(String.format("Player 1 wins!!"));
-//                    winText.setVisible(true); // Hide the win text
-//
-//                    // I want to stop the game loop here and show that player 2 won
-//                }
-
-            resetPositions();
-            draw_scoreboard();
-            System.out.println(score.player1);
-
-        }
-        else if (slowball.getX() >= (GAME_WIDTH - BALL_DIAMETER) && slowball.getY() >= (goalpos+ BALL_DIAMETER) && slowball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
-
-            score.player1++;
-
-            resetPositions();
-            draw_scoreboard();
-            System.out.println(score.player2);
-
-        }else if (slowball.getX() <= 0 || slowball.getX() >= (GAME_WIDTH - BALL_DIAMETER)) {
-            slowball.setXDirection(-slowball.getXVelocity());
-        }
-
-
-
-        //collision between two strikers
-        if(intersects(striker1 , striker2))
-        {
-            double fDistance = Math.sqrt(getDistance(striker1.getX(),striker1.getY(),striker2.getX(),striker2.getY()));
-
-            double fOverlap = 0.5 * (fDistance-strikerSize);
-
-//            System.out.println("striker striker collision");
-            System.out.println(fDistance);
-            System.out.println(fOverlap);
-
-//
-            //setting striker1 (displacing towards neg direction
-            double finalx = fOverlap * (striker1.getX()-striker2.getX()) / fDistance;
-            striker1.setX(striker1.getX()-finalx);
-
-
-            double finaly = fOverlap * (striker1.getY()-striker2.getY()) / fDistance;
-            striker1.setY(striker1.getY()-finaly);
-
-            striker1.draw();
-
-//
-            //setting striker2 (displacing towards positive direction
-            double finalx2 = fOverlap * (striker1.getX()-striker2.getX()) / fDistance;
-            striker2.setX(striker2.getX()+finalx2);
-
-
-            double finaly2 = fOverlap * (striker1.getY()-striker2.getY()) / fDistance;
-            striker2.setY(striker2.getY()+finaly2);
-
-
-            striker2.draw();
-
-        }
-
-        // Collisions with the strikers to the ball
-//        if (intersects(ball, striker1) || intersects(ball, striker2)) {
-
-        // Collisions with the strikers
-        if (intersectsslow(slowball, striker1) || intersectsslow(slowball, striker2)) {
-
-
-            // Create a blast effect at the collision point
-            BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
-//                BlastEffect blastEffect2 = new BlastEffect(ball.getX(), ball.getY()-blastoffset, Color.YELLOW);
-//                BlastEffect blastEffect3 = new BlastEffect(ball.getX()+blastoffset, ball.getY(), Color.GOLDENROD);
-//                BlastEffect blastEffect4 = new BlastEffect(ball.getX()+blastoffset, ball.getY()-blastoffset, Color.GOLDENROD);
-//                BlastEffect blastEffect5 = new BlastEffect(ball.getX()+blastoffset-blastoffset, ball.getY()+blastoffset, Color.GOLDENROD);
-
-            // Add the blast effect to the scene
-            pane.getChildren().add(blastEffect1);
-//                pane.getChildren().add(blastEffect2);
-//                pane.getChildren().add(blastEffect3);
-//                pane.getChildren().add(blastEffect4);
-//                pane.getChildren().add(blastEffect5);
-
-
-            double relativeCollisionX = slowball.getX() - slowball.getX();
-            double relativeCollisionY = slowball.getY() - slowball.getY();
-
-            // Calculate the angle of collision
-            double collisionAngle = Math.atan2(relativeCollisionY, relativeCollisionX);
-
-            // Determine the direction of the striker's movement
-            double strikerMovementDirection = Math.atan2(striker1.getSpeedY(), striker1.getSpeedX());
-
-            // Calculate the angle between the striker's movement direction and the collision angle
-            double angleDifference = collisionAngle - strikerMovementDirection;
-
-            // Adjust the direction of the ball based on the angle difference
-            double newBallXVelocity = Math.cos(angleDifference) * slowball.getXVelocity() - Math.sin(angleDifference) * slowball.getYVelocity();
-            double newBallYVelocity = Math.sin(angleDifference) * slowball.getXVelocity() + Math.cos(angleDifference) * slowball.getYVelocity();
-
-            // Update the ball's velocity
-            slowball.setXDirection(newBallXVelocity);
-            slowball.setYDirection(newBallYVelocity);
-
-
-        }
-//        }
-
-
-    }
-
-=======
-        // Setting mouse control
-        c.setOnMousePressed(event -> pressed(event, striker));
-        c.setOnMouseDragged(event -> dragged(event, striker));
-        c.setOnMouseReleased(event -> released(event, striker));
-    }
-
-    //Collision physics
-
->>>>>>> edfae3f (ggs)
     public void checkCollision() {
 
 
         int diameter = strikerSize/2;
         int ball_radius = BALL_DIAMETER/2;
-<<<<<<< HEAD
-        int rectWidth = 50;
-        int rectHeight = 150;
-        int rectX = 0; // Positioned on the left wall
-        int rectY = (GAME_HEIGHT - rectHeight) / 2;
-=======
->>>>>>> edfae3f (ggs)
 
 
         // left side Boundary checking for striker1
@@ -686,53 +388,40 @@ public class Board {
         }
 
         // Ball bounce off the left and right edges  & setting the goalpost
-<<<<<<< HEAD
-       if (ball.getX() <= 0 && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier) {
+        if (ball.getX() <= 0 && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
 
             score.player2++;
 
-=======
-        if (ball.getX() <= 0 && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
+//                if(score.player2 > score.player1)
+//                if(score.getTime() == 0)
+//                {
+//                    gameEnded = true;
+//                    gameLoop.stop();
+//                    winText.setText(String.format("Player 1 wins!!"));
+//                    winText.setVisible(true); // Hide the win text
+//
+//                    // I want to stop the game loop here and show that player 2 won
+//                }
 
-                score.player2++;
-                resetPositions();
-                draw_scoreboard();
-                System.out.println(score.player2);
-
-        }
-        else if (ball.getX() >= (GAME_WIDTH - BALL_DIAMETER) && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
-
-            score.player1++;
->>>>>>> edfae3f (ggs)
             resetPositions();
             draw_scoreboard();
             System.out.println(score.player1);
 
-<<<<<<< HEAD
         }
-
-        if (ball.getX() - ball_radius <= rectX + rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrier) {
-            // Check collision with the top side of the rectangle
-            if (ball.getY() - ball_radius <= rectY) {
-                ball.setY(rectY + ball_radius); // Prevent the ball from entering the rectangle
-                ball.setYDirection(-ball.getYVelocity());
-            }
-            // Check collision with the bottom side of the rectangle
-            if (ball.getY() + ball_radius >= rectY + rectHeight) {
-                ball.setY(rectY + rectHeight - ball_radius); // Prevent the ball from entering the rectangle
-                ball.setYDirection(-ball.getYVelocity());
-            }
-            // Check collision with the right side of the rectangle
-            if (ball.getX() - ball_radius <= rectX + rectWidth) {
-                ball.setX(rectX + rectWidth + ball_radius); // Prevent the ball from entering the rectangle
-                ball.setXDirection(-ball.getXVelocity());
-            }
-        }
-
         else if (ball.getX() >= (GAME_WIDTH - BALL_DIAMETER) && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
 
             score.player1++;
 
+////            if(score.player1 == 2)
+//            if(score.getTime() == 0)
+//            {
+//                gameEnded = true;
+//                gameLoop.stop();
+//                winText.setText(String.format("Player 2 wins!!"));
+//                winText.setVisible(true); // Hide the win text
+//
+//                // I want to stop the game loop here and show that player 1 won
+//            }
 
             resetPositions();
             draw_scoreboard();
@@ -740,10 +429,6 @@ public class Board {
 
         }else if (ball.getX() <= 0 || ball.getX() >= (GAME_WIDTH - BALL_DIAMETER)) {
             ball.setXDirection(-ball.getXVelocity());
-=======
-        }else if (ball.getX() <= 0 || ball.getX() >= (GAME_WIDTH - BALL_DIAMETER)) {
-                ball.setXDirection(-ball.getXVelocity());
->>>>>>> edfae3f (ggs)
         }
 
 
@@ -785,7 +470,6 @@ public class Board {
         }
 
         // Collisions with the strikers to the ball
-<<<<<<< HEAD
 //        if (intersects(ball, striker1) || intersects(ball, striker2)) {
 
         // Collisions with the strikers
@@ -826,43 +510,12 @@ public class Board {
             // Update the ball's velocity
             ball.setXDirection(newBallXVelocity);
             ball.setYDirection(newBallYVelocity);
-
-
         }
 //        }
-=======
-        if (intersects(ball, striker1) || intersects(ball, striker2)) {
-
-            // Collisions with the strikers
-            if (intersects(ball, striker1) || intersects(ball, striker2)) {
-
-                double relativeCollisionX = ball.getX() - striker1.getX();
-                double relativeCollisionY = ball.getY() - striker1.getY();
-
-                // Calculate the angle of collision
-                double collisionAngle = Math.atan2(relativeCollisionY, relativeCollisionX);
-
-                // Determine the direction of the striker's movement
-                double strikerMovementDirection = Math.atan2(striker1.getSpeedY(), striker1.getSpeedX());
-
-                // Calculate the angle between the striker's movement direction and the collision angle
-                double angleDifference = collisionAngle - strikerMovementDirection;
-
-                // Adjust the direction of the ball based on the angle difference
-                double newBallXVelocity = Math.cos(angleDifference) * ball.getXVelocity() - Math.sin(angleDifference) * ball.getYVelocity();
-                double newBallYVelocity = Math.sin(angleDifference) * ball.getXVelocity() + Math.cos(angleDifference) * ball.getYVelocity();
-
-                // Update the ball's velocity
-                ball.setXDirection(newBallXVelocity);
-                ball.setYDirection(newBallYVelocity);
-            }
-        }
->>>>>>> edfae3f (ggs)
 
 
     }
 
-<<<<<<< HEAD
     // game restart after winning 1
     @FXML
     private void restartGame(MouseEvent event) {
@@ -887,8 +540,6 @@ public class Board {
     }
 
 
-=======
->>>>>>> edfae3f (ggs)
     private void resetPositions() {
         // Remove previously drawn ball and strikers from the pane
         pane.getChildren().remove(ball.getCircle());
@@ -896,13 +547,8 @@ public class Board {
         pane.getChildren().remove(striker2.getCircle());
 
         // Reset positions for striker1 and striker2
-<<<<<<< HEAD
         newStriker(100, 300, Color.RED,1, striker1); // initial position of the strikers in the board
         newStriker(700, 300, Color.GREEN,2, striker2);
-=======
-        newStriker(100, 300, Color.RED, striker1); // initial position of the strikers in the board
-        newStriker(700, 300, Color.GREEN, striker2);
->>>>>>> edfae3f (ggs)
 
         // Reset ball position
         newBall();
@@ -922,23 +568,6 @@ public class Board {
 //        return strikerCircle.getBoundsInParent().intersects(ballCircle.getBoundsInParent()) || ballCircle.getBoundsInParent().intersects(strikerCircle.getBoundsInParent());
     }
 
-<<<<<<< HEAD
-    private boolean intersectsslow(slow_ball slowball, Striker striker) {
-
-        Circle ballCircle = slowball.getCircle();
-        Circle strikerCircle = striker.getCircle();
-//
-//        System.out.println(getDistance(striker.getX(),striker.getY(),ball.getX(),ball.getY()));
-//        System.out.println(Math.pow(ballCircle.getRadius() + strikerCircle.getRadius(),2));
-
-        return getDistance(striker.getX(),striker.getY(),slowball.getX(),slowball.getY()) <= Math.pow(ballCircle.getRadius() + strikerCircle.getRadius(),2);
-
-//        // checks that if both bounds collide or not
-//        return strikerCircle.getBoundsInParent().intersects(ballCircle.getBoundsInParent()) || ballCircle.getBoundsInParent().intersects(strikerCircle.getBoundsInParent());
-    }
-
-=======
->>>>>>> edfae3f (ggs)
     private boolean intersects(Striker striker1, Striker striker2) {
 
 //        Circle ballCircle = ball.getCircle();
@@ -996,104 +625,4 @@ public class Board {
         startY = event.getSceneY();
         startTime = System.nanoTime();
     }
-<<<<<<< HEAD
-
-    @FXML
-    private void handleSlowOpponentButtonClick(ActionEvent actionEvent) {
-        if (true) {
-            isSlowed = true;
-            ballVelocity=2;
-
-            Circle c = new Circle(); // before passing it to the ball constructor first we are creating a circle
-            c.setFill(Color.YELLOW);
-            c.setStroke(Color.WHITE);
-
-            Random random = new Random();
-            slowball = new slow_ball(ball.getX(), ball.getY(), BALL_DIAMETER, c);
-            ball.getCircle().setVisible(false);
-
-
-            pane.getChildren().add(c);
-
-
-
-            Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.seconds(5),
-                    new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            ballVelocity = 5; // Reset the ball's velocity to its initial value
-
-                            isSlowed = false;
-                            slowball.getCircle().setVisible(false);
-                            Circle c = new Circle(); // before passing it to the ball constructor first we are creating a circle
-                            c.setFill(Color.YELLOW);
-                            c.setStroke(Color.WHITE);
-                            ball.setX(slowball.getX());
-                            ball.setY(slowball.getY());
-
-                            Random random = new Random();
-                            ball.getCircle().setVisible(true);
-
-
-                        }
-                    }
-            ));
-            timeline.setCycleCount(1);
-            timeline.play();
-        }
-    }
-
-    @FXML
-    private void handlefreezeOpponentButtonClick(ActionEvent actionEvent) {
-        // Check if the opponent striker is not already frozen
-        if (!isOpponentStrikerFrozen) {
-            // Set the flag to indicate that the opponent striker is frozen
-            isOpponentStrikerFrozen = true;
-
-            // Disable mouse events for the opponent striker
-            striker2.getCircle().setDisable(true);
-
-            // Start a timeline to unfreeze the opponent striker after 5 seconds
-            Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.seconds(5),
-                    new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            // Reset the flag to indicate that the opponent striker is no longer frozen
-                            isOpponentStrikerFrozen = false;
-
-                            // Enable mouse events for the opponent striker
-                            striker2.getCircle().setDisable(false);
-                        }
-                    }
-            ));
-            timeline.setCycleCount(1);
-            timeline.play();
-        }
-    }
-    @FXML
-    private void handlegoalpostbarrierButtonClick(ActionEvent actionEvent) {
-
-        if (!goalpostbarrier) {
-
-            goalpostbarrier = true;
-            player1goalps.setStroke(Color.RED);
-            Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.seconds(5),
-                    new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            goalpostbarrier = false;
-                            player1goalps.setStroke(Color.WHITE);
-                        }
-                    }
-            ));
-            timeline.setCycleCount(1);
-            timeline.play();
-        }
-    }
-
-=======
->>>>>>> edfae3f (ggs)
 }

@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> edfae3f (ggs)
 //package com.example.aeroblitz;
 //
 //import javafx.application.Application;
@@ -48,7 +45,6 @@
 ////
 ////    }
 ////
-<<<<<<< HEAD
 //////}
 //=======
 //package com.example.aeroblitz;
@@ -78,6 +74,3 @@
 //
 //}
 //>>>>>>> 1709435 (ggs)
-=======
-////}
->>>>>>> edfae3f (ggs)

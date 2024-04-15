@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="63a64c77-ee3a-45d7-8ff3-4f599acb8d37" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/AeroBlitz.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/AeroBlitz.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Ball.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/GameFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/GameFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/GamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Paddle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Paddle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Striker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Striker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/startscenecontroller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/startscenecontroller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/aeroblitz/startscene.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/aeroblitz/startscene.fxml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "Rebasing master",
+    "last_opened_file_path": "D:/2-2/gpxlab/AeroBlitzSem4-4-master - Copy"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Aeroblitz" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Aeroblitz" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+</project>

@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-//<<<<<<< HEAD
+
 ////import javafx.animation.AnimationTimer;
 ////import javafx.scene.Group;
 ////import javafx.scene.canvas.Canvas;
@@ -216,7 +215,6 @@
 //
 //    public void newBall()
 //    {
-=======
 //import javafx.animation.AnimationTimer;
 //import javafx.scene.Group;
 //import javafx.scene.canvas.Canvas;
@@ -260,13 +258,12 @@
 //    private void newBall() {
 //        // Initialize the ball
 //
->>>>>>> edfae3f (ggs)
+
 //        random = new Random();
 //        ball = new Ball((GAME_WIDTH/2)-(BALL_DIAMETER/2), random.nextInt((GAME_HEIGHT)-(BALL_DIAMETER)),BALL_DIAMETER,BALL_DIAMETER);
 //        // for new ball we are using y to start off the ball any height at the middle line of the field
 //    }
 //
-<<<<<<< HEAD
 //    public void newPaddles()
 //    {
 //        paddle1 = new Paddle(0,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2),PADDLE_WIDTH,PADDLE_HEIGHT,1);
@@ -294,37 +291,6 @@
 //
 //    public void checkCollision()
 //    {
-=======
-//    private void newPaddles() {
-//        // Initialize paddles
-//        paddle1 = new Paddle(0,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2),PADDLE_WIDTH,PADDLE_HEIGHT,1);
-//        paddle2 = new Paddle(GAME_WIDTH-PADDLE_WIDTH,(GAME_HEIGHT/2)-(PADDLE_HEIGHT/2),PADDLE_WIDTH,PADDLE_HEIGHT,2);
-//    }
-//
-//    private void startGameLoop() {
-//        new AnimationTimer() {
-//            @Override
-//            public void handle(long now) {
-//                // Game loop logic goes here
-//                move();
-//                checkCollision();
-//                draw();
-//            }
-//        }.start();
-//    }
-//
-//    private void move() {
-//        // Move game objects
-//
-//        paddle1.move();
-//        paddle2.move();
-//        ball.move();
-//    }
-//
-//    private void checkCollision() {
-//        // Check for collisions
-//
->>>>>>> edfae3f (ggs)
 //        //boundary checking for paddle1
 //        if(paddle1.y<=0)
 //            paddle1.y=0;
@@ -402,7 +368,6 @@
 //        }
 //    }
 //
-<<<<<<< HEAD
 //
 //    public void move()
 //    {
@@ -451,7 +416,6 @@
 //    }
 //}
 //>>>>>>> 1709435 (ggs)
-=======
 //    private void draw() {
 //        // Draw game objects
 //    }
@@ -468,4 +432,4 @@
 //        // Handle mouse drag
 //    }
 //}
->>>>>>> edfae3f (ggs)
+

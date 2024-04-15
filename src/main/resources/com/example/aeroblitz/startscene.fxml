@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<<<<<<< HEAD
 <?import javafx.scene.control.Label?>
+=======
+>>>>>>> a6dd21b (added game scenes)
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.paint.Color?>
@@ -9,6 +12,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
+<<<<<<< HEAD
 <AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-size: cover; -fx-background-color: #000000;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aeroblitz.startscenecontroller">
 
     <children>
@@ -22,6 +26,20 @@
         <Button id="newgame" layoutX="58.0" layoutY="121.0" mnemonicParsing="false" onAction="#handleNewGameButtonClick" prefHeight="63.0" prefWidth="293.0" stylesheets="@../../../buttons.css" text="NEW GAME">
             <font>
                 <Font name="Bookshelf Symbol 7" size="36.0" />
+=======
+<AnchorPane fx:id="anchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-size: cover; -fx-background-color: #000000;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aeroblitz.startscenecontroller">
+
+    <children>
+      <ImageView fx:id="imageView" fitHeight="683.0" fitWidth="438.0" layoutX="460.0" pickOnBounds="true" preserveRatio="true" />
+        <Button layoutX="135.0" layoutY="256.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="307.0" style="-fx-background-color: #D3D3D3;" text="START" textFill="#701414">
+            <font>
+                <Font name="Times New Roman Bold" size="36.0" />
+            </font>
+        </Button>
+        <Button layoutX="135.0" layoutY="61.0" mnemonicParsing="false" onAction="#handleNewGameButtonClick" prefHeight="63.0" prefWidth="307.0" text="NEW GAME">
+            <font>
+                <Font name="Times New Roman Bold" size="35.0" />
+>>>>>>> a6dd21b (added game scenes)
             </font>
          <textFill>
             <RadialGradient centerX="0.7140221683741496" centerY="0.5" radius="0.5">
@@ -40,6 +58,7 @@
             </RadialGradient>
          </textFill>
         </Button>
+<<<<<<< HEAD
 
         <Button id="quit" fx:id="quit" layoutX="66.0" layoutY="415.0" mnemonicParsing="false" onAction="#handleQuitButtonClick" prefHeight="63.0" prefWidth="286.0" stylesheets="@../../../buttons.css" text="QUIT" textFill="#701414">
             <font>
@@ -52,5 +71,12 @@
             <Font name="Dubai Medium" size="69.0" />
          </font>
       </Label>
+=======
+        <Button layoutX="139.0" layoutY="447.0" mnemonicParsing="false" onAction="#handleQuitButtonClick" prefHeight="63.0" prefWidth="307.0" style="-fx-background-color: #D3D3D3;" text="QUIT" textFill="#803f3f">
+            <font>
+                <Font name="Times New Roman Bold" size="36.0" />
+            </font>
+        </Button>
+>>>>>>> a6dd21b (added game scenes)
     </children>
 </AnchorPane>
