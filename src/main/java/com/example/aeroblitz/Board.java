@@ -6,7 +6,10 @@ import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+<<<<<<< HEAD
 import javafx.scene.control.Label;
+=======
+>>>>>>> 53e6d68 (added effects incomplete)
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -32,7 +35,11 @@ public class Board {
 
     private final Set<KeyCode> pressedKeys = new HashSet<>(); // for keyboard movements in striker2
 
+<<<<<<< HEAD
     private  double STRIKER_SPEED = 2; // speed of the striker2
+=======
+    private  double STRIKER_SPEED = 10; // speed of the striker2
+>>>>>>> 53e6d68 (added effects incomplete)
     private double goalpos = 230;
 
     private Striker striker1;
@@ -52,8 +59,11 @@ public class Board {
     private GraphicsContext gc, gc1;
     private Score score;
 
+<<<<<<< HEAD
     private ttimer __timer;
 
+=======
+>>>>>>> 53e6d68 (added effects incomplete)
 //    private final ScaleTransition blastTransition = new ScaleTransition(Duration.seconds(0.3));
 
     private double blastoffset = 5;
@@ -65,6 +75,7 @@ public class Board {
     private final int maxTrailLength = 20; // Adjust the maximum length of the motion trail as needed
 
 
+<<<<<<< HEAD
     // score label
     @FXML
     private Label winText;
@@ -73,6 +84,8 @@ public class Board {
 
 
 
+=======
+>>>>>>> 53e6d68 (added effects incomplete)
     private final AnimationTimer gameLoop = new AnimationTimer() { //game loop for running updates in the board
         @Override
         public void handle(long now) {
@@ -162,6 +175,7 @@ public class Board {
         gameLoop.start();
     }
 
+<<<<<<< HEAD
 
     //motion trail is turned off for now
 
@@ -209,6 +223,51 @@ public class Board {
 //            // Remove the oldest trail segment from the scene
 //            pane.getChildren().remove(motionTrail.remove(0));
 //        }
+=======
+    private void drawTrail() {
+        gc1.setStroke(Color.rgb(255, 255, 255, 0.5)); // Set the color and transparency of the motion trail
+        gc1.setLineWidth(2); // Set the width of the motion trail lines
+
+        for (Line segment : motionTrail) {
+            gc1.strokeLine(segment.getStartX(), segment.getStartY(), segment.getEndX(), segment.getEndY());
+        }
+    }
+
+    private void updateMotionTrail(Ball ball) {
+        double trailStartX = ball.getX() + ball.getradius(); // Calculate the x-coordinate of the trail start
+        double trailStartY = ball.getY() + ball.getradius(); // Calculate the y-coordinate of the trail start
+
+        // Calculate the end point of the trail segment
+        double trailEndX = ball.getX() - ball.getXVelocity() + ball.getradius();
+        double trailEndY = ball.getY() - ball.getYVelocity() + ball.getradius();
+
+        Line trailSegment = new Line(trailStartX, trailStartY, trailEndX, trailEndY);
+        trailSegment.setStroke(Color.CRIMSON);
+
+        // Set initial opacity of the trail segment
+        trailSegment.setOpacity(1.0);
+
+        // Fade away the trail segment over time
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), trailSegment);
+        fadeOut.setToValue(0.0); // Fade to fully transparent
+        // Set the action to be performed when the fade-out animation completes
+        fadeOut.setOnFinished(event -> {
+            // Remove the trail segment from the scene after fading out completely
+            pane.getChildren().remove(trailSegment);
+            // Remove the trail segment from the motion trail list
+            motionTrail.remove(trailSegment);
+        });
+
+        fadeOut.play();
+
+        motionTrail.add(trailSegment);
+
+        // Remove oldest segment if the trail is too long
+        if (motionTrail.size() > maxTrailLength) {
+            // Remove the oldest trail segment from the scene
+            pane.getChildren().remove(motionTrail.remove(0));
+        }
+>>>>>>> 53e6d68 (added effects incomplete)
     }
 
     private void draw_scoreboard() {
@@ -233,6 +292,7 @@ public class Board {
     public void newStriker(int x, int y, Color color, int id, Striker striker) {
         Circle c = new Circle();
         Color neonColor = color.brighter().brighter().brighter();
+<<<<<<< HEAD
         c.setFill(Color.WHITE);
         c.setStroke(neonColor);
 
@@ -240,6 +300,10 @@ public class Board {
         // Set the stroke width
         strokeWidth = 15.0; // Change this value as needed
         c.setStrokeWidth(strokeWidth);
+=======
+        c.setFill(neonColor);
+        c.setStroke(Color.WHITE);
+>>>>>>> 53e6d68 (added effects incomplete)
 
         double radius = strikerSize / 3.0;
 
@@ -253,8 +317,12 @@ public class Board {
 
         striker.draw(); //draw the striker
 
+<<<<<<< HEAD
 //        if(striker.getID() == 2) {
         if(true) {
+=======
+        if(striker.getID() == 1) {
+>>>>>>> 53e6d68 (added effects incomplete)
 
             // Setting mouse control
             c.setOnMousePressed(event -> pressed(event, striker));
@@ -264,6 +332,7 @@ public class Board {
         else
         {
 
+<<<<<<< HEAD
 //            // Setting keyboard control
 //            pane.setOnKeyPressed(event -> keyPressed(event, striker));
 //            pane.requestFocus(); // Ensure the pane has focus to receive key events
@@ -275,6 +344,57 @@ public class Board {
 
 
         }
+=======
+            // Setting keyboard control
+            pane.setOnKeyPressed(event -> keyPressed(event, striker));
+            pane.requestFocus(); // Ensure the pane has focus to receive key events
+
+        }
+    }
+
+    private void keyPressed(KeyEvent event, Striker striker) {
+        pressedKeys.add(event.getCode());
+        moveStriker(striker);
+    }
+
+    private void moveStriker(Striker striker) {
+        double deltaX = 0;
+        double deltaY = 0;
+
+        if (pressedKeys.contains(KeyCode.UP)) deltaY -= 1;
+        if (pressedKeys.contains(KeyCode.LEFT)) deltaX -= 1;
+        if (pressedKeys.contains(KeyCode.DOWN)) deltaY += 1;
+        if (pressedKeys.contains(KeyCode.RIGHT)) deltaX += 1;
+
+        // Normalize diagonal movement
+        if (deltaX != 0 && deltaY != 0) {
+            double diagonalFactor = Math.sqrt(0.5);
+            deltaX *= diagonalFactor;
+            deltaY *= diagonalFactor;
+        }
+
+        double newX = striker.getX() + deltaX * STRIKER_SPEED;
+        double newY = striker.getY() + deltaY * STRIKER_SPEED;
+
+        // Boundary checking
+        newX = Math.max(Math.min(newX, GAME_WIDTH - strikerSize / 2), strikerSize / 2);
+        newY = Math.max(Math.min(newY, GAME_HEIGHT - strikerSize / 2), strikerSize / 2);
+
+        striker.setX(newX);
+        striker.setY(newY);
+        striker.draw();
+    }
+
+    private void moveStriker(Striker striker, double deltaX, double deltaY) {
+        int speed = 10;
+        double newX = striker.getX() + deltaX*speed;
+        double newY = striker.getY() + deltaY*speed;
+        // Update the position of the striker
+        striker.setX(newX);
+        striker.setY(newY);
+        // Redraw the striker at its new position
+        striker.draw();
+>>>>>>> 53e6d68 (added effects incomplete)
     }
 
 //    private void keyPressed(KeyEvent event, Striker striker) {
@@ -471,17 +591,40 @@ public class Board {
 
         // Collisions with the strikers to the ball
 //        if (intersects(ball, striker1) || intersects(ball, striker2)) {
+<<<<<<< HEAD
 
         // Collisions with the strikers
         if (intersects(ball, striker1) || intersects(ball, striker2)) {
+=======
+>>>>>>> 53e6d68 (added effects incomplete)
 
 
+<<<<<<< HEAD
             // Create a blast effect at the collision point
             BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+=======
+
+                // Create a blast effect at the collision point
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+>>>>>>> 53e6d68 (added effects incomplete)
 //                BlastEffect blastEffect2 = new BlastEffect(ball.getX(), ball.getY()-blastoffset, Color.YELLOW);
 //                BlastEffect blastEffect3 = new BlastEffect(ball.getX()+blastoffset, ball.getY(), Color.GOLDENROD);
 //                BlastEffect blastEffect4 = new BlastEffect(ball.getX()+blastoffset, ball.getY()-blastoffset, Color.GOLDENROD);
 //                BlastEffect blastEffect5 = new BlastEffect(ball.getX()+blastoffset-blastoffset, ball.getY()+blastoffset, Color.GOLDENROD);
+<<<<<<< HEAD
+=======
+
+                // Add the blast effect to the scene
+                pane.getChildren().add(blastEffect1);
+//                pane.getChildren().add(blastEffect2);
+//                pane.getChildren().add(blastEffect3);
+//                pane.getChildren().add(blastEffect4);
+//                pane.getChildren().add(blastEffect5);
+
+
+                double relativeCollisionX = ball.getX() - striker1.getX();
+                double relativeCollisionY = ball.getY() - striker1.getY();
+>>>>>>> 53e6d68 (added effects incomplete)
 
             // Add the blast effect to the scene
             pane.getChildren().add(blastEffect1);
@@ -497,6 +640,7 @@ public class Board {
             // Calculate the angle of collision
             double collisionAngle = Math.atan2(relativeCollisionY, relativeCollisionX);
 
+<<<<<<< HEAD
             // Determine the direction of the striker's movement
             double strikerMovementDirection = Math.atan2(striker1.getSpeedY(), striker1.getSpeedX());
 
@@ -511,6 +655,12 @@ public class Board {
             ball.setXDirection(newBallXVelocity);
             ball.setYDirection(newBallYVelocity);
         }
+=======
+                // Update the ball's velocity
+                ball.setXDirection(newBallXVelocity);
+                ball.setYDirection(newBallYVelocity);
+            }
+>>>>>>> 53e6d68 (added effects incomplete)
 //        }
 
 

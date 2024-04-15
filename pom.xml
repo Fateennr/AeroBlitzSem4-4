@@ -31,7 +31,11 @@
       <version>21</version>
     </dependency>
 
+<<<<<<< HEAD
     <dependency>
+=======
+<dependency>
+>>>>>>> 53e6d68 (added effects incomplete)
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>${junit.version}</version>
