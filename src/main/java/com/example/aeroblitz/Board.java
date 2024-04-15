@@ -1,19 +1,26 @@
 package com.example.aeroblitz;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.util.Duration;
 
-import java.util.Random;
+import java.util.*;
 
 // defines the state and components of the board and the game
 
 public class Board {
+
 
     @FXML
     private AnchorPane pane;
@@ -22,7 +29,9 @@ public class Board {
     private final int GAME_HEIGHT = 600;
     private final int BALL_DIAMETER = 10; //adjust the size of the ball
 
+    private final Set<KeyCode> pressedKeys = new HashSet<>(); // for keyboard movements in striker2
 
+    private  double STRIKER_SPEED = 10; // speed of the striker2
     private double goalpos = 230;
 
     private Striker striker1;
@@ -38,16 +47,32 @@ public class Board {
     private double startTime; // initial time of the mouse when it is pressed
 
     private Canvas canvas;
-    private GraphicsContext gc;
+    private GraphicsContext gc, gc1;
     private Score score;
+
+//    private final ScaleTransition blastTransition = new ScaleTransition(Duration.seconds(0.3));
+
+    private double blastoffset = 5;
+
+
+    //for motiontrail on the ball
+
+    private final List<Line> motionTrail = new ArrayList<>();
+    private final int maxTrailLength = 20; // Adjust the maximum length of the motion trail as needed
+
 
     private final AnimationTimer gameLoop = new AnimationTimer() { //game loop for running updates in the board
         @Override
         public void handle(long now) {
 
+            drawTrail();
+
             // Update the position of the ball
             ball.move();
             ball.draw();
+
+            // Update motion trail for the ball
+            updateMotionTrail(ball);
 
             // Check for collisions
             checkCollision();
@@ -59,7 +84,15 @@ public class Board {
 
         canvas = new Canvas(GAME_WIDTH, GAME_HEIGHT); // Adjust the size as needed
 
+        // Initialize blast effect transition
+//        blastTransition.setToX(0);
+//        blastTransition.setToY(0);
+
+
         gc = canvas.getGraphicsContext2D();
+        gc1 = canvas.getGraphicsContext2D();
+
+
         pane.getChildren().add(canvas);
 
         score = new Score(GAME_WIDTH, GAME_HEIGHT); // Pass the dimensions of your game window
@@ -73,13 +106,57 @@ public class Board {
 
 
         // Initialize the board
-        newStriker(100, 300, Color.RED, striker1); // initial position of the strikers in the board
-        newStriker(700, 300, Color.GREEN, striker2);
+        newStriker(100, 300, Color.RED, 1, striker1); // initial position of the strikers in the board
+        newStriker(700, 300, Color.GREEN,2, striker2);
         newBall(); // initial position of the ball, it will start from any random position in the middle line of the board
-        ;
 
         // Start the game loop
         gameLoop.start();
+    }
+
+    private void drawTrail() {
+        gc1.setStroke(Color.rgb(255, 255, 255, 0.5)); // Set the color and transparency of the motion trail
+        gc1.setLineWidth(2); // Set the width of the motion trail lines
+
+        for (Line segment : motionTrail) {
+            gc1.strokeLine(segment.getStartX(), segment.getStartY(), segment.getEndX(), segment.getEndY());
+        }
+    }
+
+    private void updateMotionTrail(Ball ball) {
+        double trailStartX = ball.getX() + ball.getradius(); // Calculate the x-coordinate of the trail start
+        double trailStartY = ball.getY() + ball.getradius(); // Calculate the y-coordinate of the trail start
+
+        // Calculate the end point of the trail segment
+        double trailEndX = ball.getX() - ball.getXVelocity() + ball.getradius();
+        double trailEndY = ball.getY() - ball.getYVelocity() + ball.getradius();
+
+        Line trailSegment = new Line(trailStartX, trailStartY, trailEndX, trailEndY);
+        trailSegment.setStroke(Color.CRIMSON);
+
+        // Set initial opacity of the trail segment
+        trailSegment.setOpacity(1.0);
+
+        // Fade away the trail segment over time
+        FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), trailSegment);
+        fadeOut.setToValue(0.0); // Fade to fully transparent
+        // Set the action to be performed when the fade-out animation completes
+        fadeOut.setOnFinished(event -> {
+            // Remove the trail segment from the scene after fading out completely
+            pane.getChildren().remove(trailSegment);
+            // Remove the trail segment from the motion trail list
+            motionTrail.remove(trailSegment);
+        });
+
+        fadeOut.play();
+
+        motionTrail.add(trailSegment);
+
+        // Remove oldest segment if the trail is too long
+        if (motionTrail.size() > maxTrailLength) {
+            // Remove the oldest trail segment from the scene
+            pane.getChildren().remove(motionTrail.remove(0));
+        }
     }
 
     private void draw_scoreboard() {
@@ -98,15 +175,18 @@ public class Board {
         ball = new Ball((GAME_WIDTH / 2) - (BALL_DIAMETER / 2), random.nextInt((GAME_HEIGHT) - (BALL_DIAMETER)), BALL_DIAMETER, c);
         pane.getChildren().add(c);
         ball.draw();
+
     }
 
-    public void newStriker(int x, int y, Color color, Striker striker) {
+    public void newStriker(int x, int y, Color color, int id, Striker striker) {
         Circle c = new Circle();
-        c.setFill(color);
+        Color neonColor = color.brighter().brighter().brighter();
+        c.setFill(neonColor);
         c.setStroke(Color.WHITE);
 
         double radius = strikerSize / 3.0;
 
+        striker.setID(id);
         striker.setX(x);
         striker.setY(y);
         striker.setColor(color);
@@ -116,10 +196,65 @@ public class Board {
 
         striker.draw(); //draw the striker
 
-        // Setting mouse control
-        c.setOnMousePressed(event -> pressed(event, striker));
-        c.setOnMouseDragged(event -> dragged(event, striker));
-        c.setOnMouseReleased(event -> released(event, striker));
+        if(striker.getID() == 1) {
+
+            // Setting mouse control
+            c.setOnMousePressed(event -> pressed(event, striker));
+            c.setOnMouseDragged(event -> dragged(event, striker));
+            c.setOnMouseReleased(event -> released(event, striker));
+        }
+        else
+        {
+
+            // Setting keyboard control
+            pane.setOnKeyPressed(event -> keyPressed(event, striker));
+            pane.requestFocus(); // Ensure the pane has focus to receive key events
+
+        }
+    }
+
+    private void keyPressed(KeyEvent event, Striker striker) {
+        pressedKeys.add(event.getCode());
+        moveStriker(striker);
+    }
+
+    private void moveStriker(Striker striker) {
+        double deltaX = 0;
+        double deltaY = 0;
+
+        if (pressedKeys.contains(KeyCode.UP)) deltaY -= 1;
+        if (pressedKeys.contains(KeyCode.LEFT)) deltaX -= 1;
+        if (pressedKeys.contains(KeyCode.DOWN)) deltaY += 1;
+        if (pressedKeys.contains(KeyCode.RIGHT)) deltaX += 1;
+
+        // Normalize diagonal movement
+        if (deltaX != 0 && deltaY != 0) {
+            double diagonalFactor = Math.sqrt(0.5);
+            deltaX *= diagonalFactor;
+            deltaY *= diagonalFactor;
+        }
+
+        double newX = striker.getX() + deltaX * STRIKER_SPEED;
+        double newY = striker.getY() + deltaY * STRIKER_SPEED;
+
+        // Boundary checking
+        newX = Math.max(Math.min(newX, GAME_WIDTH - strikerSize / 2), strikerSize / 2);
+        newY = Math.max(Math.min(newY, GAME_HEIGHT - strikerSize / 2), strikerSize / 2);
+
+        striker.setX(newX);
+        striker.setY(newY);
+        striker.draw();
+    }
+
+    private void moveStriker(Striker striker, double deltaX, double deltaY) {
+        int speed = 10;
+        double newX = striker.getX() + deltaX*speed;
+        double newY = striker.getY() + deltaY*speed;
+        // Update the position of the striker
+        striker.setX(newX);
+        striker.setY(newY);
+        // Redraw the striker at its new position
+        striker.draw();
     }
 
     //Collision physics
@@ -238,10 +373,26 @@ public class Board {
         }
 
         // Collisions with the strikers to the ball
-        if (intersects(ball, striker1) || intersects(ball, striker2)) {
+//        if (intersects(ball, striker1) || intersects(ball, striker2)) {
 
             // Collisions with the strikers
             if (intersects(ball, striker1) || intersects(ball, striker2)) {
+
+
+                // Create a blast effect at the collision point
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+//                BlastEffect blastEffect2 = new BlastEffect(ball.getX(), ball.getY()-blastoffset, Color.YELLOW);
+//                BlastEffect blastEffect3 = new BlastEffect(ball.getX()+blastoffset, ball.getY(), Color.GOLDENROD);
+//                BlastEffect blastEffect4 = new BlastEffect(ball.getX()+blastoffset, ball.getY()-blastoffset, Color.GOLDENROD);
+//                BlastEffect blastEffect5 = new BlastEffect(ball.getX()+blastoffset-blastoffset, ball.getY()+blastoffset, Color.GOLDENROD);
+
+                // Add the blast effect to the scene
+                pane.getChildren().add(blastEffect1);
+//                pane.getChildren().add(blastEffect2);
+//                pane.getChildren().add(blastEffect3);
+//                pane.getChildren().add(blastEffect4);
+//                pane.getChildren().add(blastEffect5);
+
 
                 double relativeCollisionX = ball.getX() - striker1.getX();
                 double relativeCollisionY = ball.getY() - striker1.getY();
@@ -263,7 +414,7 @@ public class Board {
                 ball.setXDirection(newBallXVelocity);
                 ball.setYDirection(newBallYVelocity);
             }
-        }
+//        }
 
 
     }
@@ -275,8 +426,8 @@ public class Board {
         pane.getChildren().remove(striker2.getCircle());
 
         // Reset positions for striker1 and striker2
-        newStriker(100, 300, Color.RED, striker1); // initial position of the strikers in the board
-        newStriker(700, 300, Color.GREEN, striker2);
+        newStriker(100, 300, Color.RED,1, striker1); // initial position of the strikers in the board
+        newStriker(700, 300, Color.GREEN,2, striker2);
 
         // Reset ball position
         newBall();

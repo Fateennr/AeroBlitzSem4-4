@@ -18,7 +18,8 @@ public class Score {
     }
 
     public void draw(GraphicsContext gc) {
-        gc.setStroke(Color.WHITE);
+        gc.setFill(Color.RED);
+        gc.setStroke(Color.DIMGREY);
         gc.setFont(Font.font("Consolas", 60));
         gc.strokeLine(GAME_WIDTH / 2, 0, GAME_WIDTH / 2, GAME_HEIGHT);
         gc.strokeText(String.valueOf(player1 / 10) + String.valueOf(player1 % 10), (GAME_WIDTH / 2) - 85, 50);
