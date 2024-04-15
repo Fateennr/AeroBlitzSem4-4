@@ -7,6 +7,7 @@ import javafx.scene.effect.DropShadow;
 
 public class Striker
 {
+    private int id ; // to determine the type of the striker players or opponents
     private  double x;
     private  double y;
     private  double radius;
@@ -20,8 +21,9 @@ public class Striker
         this.radius = 0;
         this.c = new Circle();
     }
-    public Striker(double x, double y, double radius, Circle c)
+    public Striker(double x, double y, double radius,int id, Circle c)
     {
+        this.id = id;
         this.x = x;
         this.y = y;
         this.radius = radius;
@@ -93,5 +95,14 @@ public class Striker
 
     public double getSpeedX() {
         return 2.5;
+    }
+
+    public void setID(int id) {
+        this.id = id;
+    }
+
+    public int getID()
+    {
+        return id;
     }
 }

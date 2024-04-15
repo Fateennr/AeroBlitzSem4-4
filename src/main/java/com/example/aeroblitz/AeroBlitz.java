@@ -16,7 +16,7 @@ public class AeroBlitz extends Application {
 
         // Set up the primary stage
         primaryStage.setTitle("AeroBlitz"); // Set the title of the window
-        primaryStage.setScene(new Scene(root, 800, 600)); // Set the scene with a specific width and height
+        primaryStage.setScene(new Scene(root, 800, 600)); // Set the scene with  a specific width and height
         primaryStage.show(); // Display the window
     }
 
