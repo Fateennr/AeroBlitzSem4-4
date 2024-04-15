@@ -1,21 +1,40 @@
 package com.example.aeroblitz;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.effect.DropShadow;
 
-public class Ball extends Rectangle {
+import java.util.Random;
+
+public class Ball extends Node {
+    private  double x;
+    private  double y;
+    private  double radius;
+    private Circle c;
+    private DropShadow dropShadow;
+
 
     Random random;
-    int xVelocity;
-    int yVelocity;
+    double xVelocity;
+    double yVelocity;
     int initialSpeed = 3;
-
-    Ball(int x, int y, int width, int height)
+    public Ball(double x, double y, double radius, Circle c)
     {
-        super(x,y,width,height);
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.c = c;
+
         random = new Random();
+
+
+        // Create a DropShadow effect
+        dropShadow = new DropShadow();
+        dropShadow.setRadius(10);
+        dropShadow.setColor(javafx.scene.paint.Color.BLACK);
+        c.setEffect(dropShadow);
+
 
         //for x
         int randomXDirection = random.nextInt(2); //setting a random direction for the ball
@@ -33,16 +52,15 @@ public class Ball extends Rectangle {
         }
         setYDirection(randomYDirection * initialSpeed);
 
+
     }
 
-    public void setXDirection(int randomXDirection)
-    {
-        xVelocity = randomXDirection;
-    }
-
-    public void setYDirection(int randomYDirection)
-    {
+    void setYDirection(double randomYDirection) {
         yVelocity = randomYDirection;
+    }
+
+    void setXDirection(double randomXDirection) {
+        xVelocity = randomXDirection;
     }
 
     public void move()
@@ -51,10 +69,53 @@ public class Ball extends Rectangle {
         y += yVelocity;
     }
 
-    public void draw(Graphics g)
+    public void setX(double x)
     {
-        g.setColor(Color.YELLOW);
-        g.fillOval(x,y,width,height);
+        this.x = x;
     }
 
+    public void setY(double y)
+    {
+        this.y = y;
+    }
+
+    public double getX()
+    {
+        return x;
+    }
+
+    public double getY()
+    {
+        return y;
+    }
+
+    public void setColor(javafx.scene.paint.Color color)
+    {
+        c.setFill(color);
+
+    }
+
+    public void draw()
+    {
+        c.setRadius(radius);
+        c.setTranslateX(x);
+        c.setTranslateY(y);
+    }
+
+    @Override
+    public Node getStyleableNode() {
+        return super.getStyleableNode();
+    }
+
+    public double getXVelocity() {
+        return xVelocity;
+    }
+
+    public double getYVelocity() {
+        return yVelocity;
+    }
+
+    public Circle getCircle() {
+        return c;
+    }
 }
