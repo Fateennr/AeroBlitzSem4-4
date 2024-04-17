@@ -6,6 +6,7 @@ import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -27,7 +28,7 @@ public class Board {
 
     private final int GAME_WIDTH = 800; //adjust the size of the board
     private final int GAME_HEIGHT = 600;
-    private final int BALL_DIAMETER = 23; //adjust the size of the ball
+    private final int BALL_DIAMETER = 20; //adjust the size of the ball
 
     private final Set<KeyCode> pressedKeys = new HashSet<>(); // for keyboard movements in striker2
 
@@ -60,6 +61,14 @@ public class Board {
 
     private final List<Line> motionTrail = new ArrayList<>();
     private final int maxTrailLength = 20; // Adjust the maximum length of the motion trail as needed
+
+
+    // score label
+    @FXML
+    private Label winText;
+
+    private boolean gameEnded = false;
+
 
 
     private final AnimationTimer gameLoop = new AnimationTimer() { //game loop for running updates in the board
@@ -344,17 +353,39 @@ public class Board {
         if (ball.getX() <= 0 && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
 
                 score.player2++;
+
+                if(score.player2 == 3)
+                {
+                    gameEnded = true;
+                    gameLoop.stop();
+                    winText.setText(String.format("Player 1 wins!!"));
+                    winText.setVisible(true); // Hide the win text
+
+                    // I want to stop the game loop here and show that player 2 won
+                }
+
                 resetPositions();
                 draw_scoreboard();
-                System.out.println(score.player2);
+                System.out.println(score.player1);
 
         }
         else if (ball.getX() >= (GAME_WIDTH - BALL_DIAMETER) && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
 
             score.player1++;
+
+            if(score.player1 == 3)
+            {
+                gameEnded = true;
+                gameLoop.stop();
+                winText.setText(String.format("Player 2 wins!!"));
+                winText.setVisible(true); // Hide the win text
+
+                // I want to stop the game loop here and show that player 1 won
+            }
+
             resetPositions();
             draw_scoreboard();
-            System.out.println(score.player1);
+            System.out.println(score.player2);
 
         }else if (ball.getX() <= 0 || ball.getX() >= (GAME_WIDTH - BALL_DIAMETER)) {
                 ball.setXDirection(-ball.getXVelocity());
@@ -444,6 +475,27 @@ public class Board {
 
 
     }
+
+    // game restart after winning 1
+    @FXML
+    private void restartGame(MouseEvent event) {
+        if (gameEnded) {
+//             Reset the game state
+            score.setPlayerScores(0, 0); // Reset scores
+            resetPositions(); // Reset positions of the ball and strikers
+            draw_scoreboard();
+            winText.setVisible(false); // Hide the win text
+            score.setPlayerScores(0,0);
+
+
+            // Restart the game loop
+            gameLoop.start();
+
+            // Reset the game ended flag
+            gameEnded = false;
+        }
+    }
+
 
     private void resetPositions() {
         // Remove previously drawn ball and strikers from the pane
