@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--<?import javafx.geometry.Insets?>-->
+<!--<?import javafx.scene.control.Label?>-->
+<!--<?import javafx.scene.layout.VBox?>-->
+<!--<?import javafx.scene.control.Button?>-->
+<!--<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"-->
+<!--      fx:controller="com.example.aeroblitz.HelloController">-->
+<!--  <padding>-->
+<!--    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>-->
+<!--  </padding>-->
+<!--  <Label fx:id="welcomeText"/>-->
+<!--  <Button text="Hello!" onAction="#onHelloButtonClick"/>-->
+<!--</VBox>-->
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aeroblitz.Board">
+
+  <!-- Air Hockey Table -->
+  <Rectangle fill="#020326" height="580.0" layoutX="-35.0" layoutY="-40.0" width="770.0" x="50" y="50" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="594.0" layoutX="391.0" layoutY="3.0" width="17.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#020326" height="150.0" layoutY="225.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="50.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#020326" height="150.0" layoutX="750.0" layoutY="225.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="50.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="140.0" layoutY="230.0" strokeType="INSIDE" width="8.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="140.0" layoutX="795.0" layoutY="230.0" strokeType="INSIDE" width="5.0" />
+   <Circle fill="DODGERBLUE" layoutX="-75.0" layoutY="-67.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+</AnchorPane>

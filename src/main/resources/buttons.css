@@ -1,0 +1,34 @@
+/* Style for the newgame button */
+#start {
+    -fx-text-fill: #701414;
+}
+
+/* Hover effect for the start button */
+#start:hover {
+    -fx-background-color: #701414; /* Darker blue on hover */
+    -fx-text-fill: #ffffff;
+}
+
+
+
+#newgame {
+-fx-text-fill: #701414;
+}
+
+/* Hover effect for the newgame button */
+#newgame:hover {
+    -fx-background-color: #701414; /* Darker blue on hover */
+    -fx-text-fill: #ffffff;
+}
+
+
+/* Style for the quit button */
+#quit {
+-fx-text-fill: #701414;
+}
+
+/* Hover effect for the quit button */
+#quit:hover {
+    -fx-background-color: #701414; /* Darker blue on hover */
+    -fx-text-fill: #ffffff;
+}
