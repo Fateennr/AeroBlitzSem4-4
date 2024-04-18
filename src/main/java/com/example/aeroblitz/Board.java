@@ -354,7 +354,7 @@ public class Board {
 
                 score.player2++;
 
-                if(score.player2 == 3)
+                if(score.player2 == 2)
                 {
                     gameEnded = true;
                     gameLoop.stop();
@@ -373,7 +373,7 @@ public class Board {
 
             score.player1++;
 
-            if(score.player1 == 3)
+            if(score.player1 == 2)
             {
                 gameEnded = true;
                 gameLoop.stop();
