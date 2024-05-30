@@ -2,10 +2,7 @@ package com.example.aeroblitz;
 
 import javafx.animation.*;
 import javafx.scene.Group;
-<<<<<<< HEAD
 import javafx.scene.media.AudioClip;
-=======
->>>>>>> 53e6d68 (added effects incomplete)
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
@@ -35,7 +32,6 @@ public class BlastEffect extends Group {
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);
 
-<<<<<<< HEAD
 
         // Create sound effect
         AudioClip audioClip = new AudioClip(getClass().getResource("/bla.wav").toString());
@@ -49,11 +45,6 @@ public class BlastEffect extends Group {
 
         });
 
-=======
-        // Combine scale and fade animations
-        ParallelTransition parallelTransition = new ParallelTransition(scaleTransition, fadeTransition);
-        parallelTransition.setOnFinished(event -> getChildren().remove(blastCircle));
->>>>>>> 53e6d68 (added effects incomplete)
 
         // Start the animation
         parallelTransition.play();

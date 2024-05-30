@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f300b4b5-eed0-4816-8f6e-37c21e43528c" name="Changes" comment="timer" />
+    <list default="true" id="f300b4b5-eed0-4816-8f6e-37c21e43528c" name="Changes" comment="timer">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Ball.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/BlastEffect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/BlastEffect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Score.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Score.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/aeroblitz/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/aeroblitz/hello-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/aeroblitz/startscene.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/aeroblitz/startscene.fxml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,7 +44,7 @@
     "Application.Main.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Rebasing master",
+    "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/2-2/gpxlab/New folder/AeroBlitzSem4-4",
     "project.structure.last.edited": "Modules",
