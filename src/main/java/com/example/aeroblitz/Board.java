@@ -15,18 +15,19 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.util.*;
-
-// defines the state and components of the board and the game
-
 
 public class Board {
 
 
     @FXML
     private AnchorPane pane;
+
+    @FXML
+    private Rectangle player1goalps,player2goalps;
 
     @FXML
     private Button slowOpponentButton;
@@ -81,6 +82,8 @@ public class Board {
     private Label winText;
 
     private boolean gameEnded = false;
+
+    private boolean goalpostbarrier=false;
 
 
 
@@ -363,6 +366,11 @@ public class Board {
         int diameter = strikerSize/2;
         int ball_radius = BALL_DIAMETER/2;
 
+        int rectWidth = 50;
+        int rectHeight = 150;
+        int rectX = 0; // Positioned on the left wall
+        int rectY = (GAME_HEIGHT - rectHeight) / 2;
+
 
         // left side Boundary checking for striker1
         if (striker1.getX() <= diameter) {
@@ -537,6 +545,10 @@ public class Board {
 
         int diameter = strikerSize/2;
         int ball_radius = BALL_DIAMETER/2;
+        int rectWidth = 50;
+        int rectHeight = 150;
+        int rectX = 0; // Positioned on the left wall
+        int rectY = (GAME_HEIGHT - rectHeight) / 2;
 
 
         // left side Boundary checking for striker1
@@ -588,40 +600,38 @@ public class Board {
         }
 
         // Ball bounce off the left and right edges  & setting the goalpost
-        if (ball.getX() <= 0 && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
+       if (ball.getX() <= 0 && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier) {
 
             score.player2++;
-
-//                if(score.player2 > score.player1)
-//                if(score.getTime() == 0)
-//                {
-//                    gameEnded = true;
-//                    gameLoop.stop();
-//                    winText.setText(String.format("Player 1 wins!!"));
-//                    winText.setVisible(true); // Hide the win text
-//
-//                    // I want to stop the game loop here and show that player 2 won
-//                }
 
             resetPositions();
             draw_scoreboard();
             System.out.println(score.player1);
 
         }
+
+        if (ball.getX() - ball_radius <= rectX + rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrier) {
+            // Check collision with the top side of the rectangle
+            if (ball.getY() - ball_radius <= rectY) {
+                ball.setY(rectY + ball_radius); // Prevent the ball from entering the rectangle
+                ball.setYDirection(-ball.getYVelocity());
+            }
+            // Check collision with the bottom side of the rectangle
+            if (ball.getY() + ball_radius >= rectY + rectHeight) {
+                ball.setY(rectY + rectHeight - ball_radius); // Prevent the ball from entering the rectangle
+                ball.setYDirection(-ball.getYVelocity());
+            }
+            // Check collision with the right side of the rectangle
+            if (ball.getX() - ball_radius <= rectX + rectWidth) {
+                ball.setX(rectX + rectWidth + ball_radius); // Prevent the ball from entering the rectangle
+                ball.setXDirection(-ball.getXVelocity());
+            }
+        }
+
         else if (ball.getX() >= (GAME_WIDTH - BALL_DIAMETER) && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER)) {
 
             score.player1++;
 
-////            if(score.player1 == 2)
-//            if(score.getTime() == 0)
-//            {
-//                gameEnded = true;
-//                gameLoop.stop();
-//                winText.setText(String.format("Player 2 wins!!"));
-//                winText.setVisible(true); // Hide the win text
-//
-//                // I want to stop the game loop here and show that player 1 won
-//            }
 
             resetPositions();
             draw_scoreboard();
@@ -909,6 +919,27 @@ public class Board {
 
                             // Enable mouse events for the opponent striker
                             striker2.getCircle().setDisable(false);
+                        }
+                    }
+            ));
+            timeline.setCycleCount(1);
+            timeline.play();
+        }
+    }
+    @FXML
+    private void handlegoalpostbarrierButtonClick(ActionEvent actionEvent) {
+
+        if (!goalpostbarrier) {
+
+            goalpostbarrier = true;
+            player1goalps.setStroke(Color.RED);
+            Timeline timeline = new Timeline(new KeyFrame(
+                    Duration.seconds(5),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            goalpostbarrier = false;
+                            player1goalps.setStroke(Color.WHITE);
                         }
                     }
             ));
