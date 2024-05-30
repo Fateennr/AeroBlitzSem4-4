@@ -14,11 +14,14 @@
 <!--</VBox>-->
 <!--<?xml version="1.0" encoding="UTF-8"?>-->
 
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aeroblitz.Board">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#restartGame" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aeroblitz.Board">
 
   <!-- Air Hockey Table -->
   <Rectangle fill="#020326" height="580.0" layoutX="-35.0" layoutY="-40.0" width="770.0" x="50" y="50" />
@@ -28,4 +31,12 @@
    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="140.0" layoutY="230.0" strokeType="INSIDE" width="8.0" />
    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="140.0" layoutX="795.0" layoutY="230.0" strokeType="INSIDE" width="5.0" />
    <Circle fill="DODGERBLUE" layoutX="-75.0" layoutY="-67.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
+   <Label fx:id="winText" alignment="CENTER" contentDisplay="RIGHT" layoutX="230.0" layoutY="292.0" prefHeight="51.0" prefWidth="340.0" textAlignment="CENTER" textFill="#ffff02">
+      <font>
+         <Font name="Bookshelf Symbol 7" size="35.0" />
+      </font>
+      <effect>
+         <Glow />
+      </effect>
+   </Label>
 </AnchorPane>

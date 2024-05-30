@@ -26,7 +26,7 @@ public class Ball extends Group {
     Random random;
     double xVelocity;
     double yVelocity;
-    int initialSpeed = 3;
+    int initialSpeed = 5;
 
     public Ball(double x, double y, double radius, Circle c) {
         this.x = x;
@@ -76,7 +76,8 @@ public class Ball extends Group {
         y += yVelocity;
 
         // Update motion trail position
-        for (Node node : motionTrail) {
+        for (Node node : motionTrail)
+        {
             if (node instanceof Line) {
                 Line trail = (Line) node;
                 trail.setStartX(trail.getStartX() + xVelocity);
