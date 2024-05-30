@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Ball extends Group {
+public class slow_ball extends Group {
     private double x;
     private double y;
     private double radius;
@@ -26,9 +26,9 @@ public class Ball extends Group {
     Random random;
     double xVelocity;
     double yVelocity;
-    double initialSpeed = 5;
+    double initialSpeed = 1;
 
-    public Ball(double x, double y, double radius, Circle c) {
+    public slow_ball(double x, double y, double radius, Circle c) {
         this.x = x;
         this.y = y;
         this.radius = radius;

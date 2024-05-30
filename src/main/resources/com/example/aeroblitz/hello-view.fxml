@@ -14,6 +14,7 @@
 <!--</VBox>-->
 <!--<?xml version="1.0" encoding="UTF-8"?>-->
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -21,7 +22,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#restartGame" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aeroblitz.Board">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#restartGame" prefHeight="675.0" prefWidth="893.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aeroblitz.Board">
 
   <!-- Air Hockey Table -->
   <Rectangle fill="#020326" height="580.0" layoutX="-35.0" layoutY="-40.0" width="770.0" x="50" y="50" />
@@ -39,4 +40,7 @@
          <Glow />
       </effect>
    </Label>
+
+    <Button fx:id="slowOpponentButton" layoutX="40.0" layoutY="607.0" onAction="#handleSlowOpponentButtonClick" onMouseClicked="#handleSlowOpponentButtonClick" prefHeight="43.0" prefWidth="115.0" text="slow ball" />
+   <Button layoutX="204.0" layoutY="607.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClick" text="freeze oponengt" />
 </AnchorPane>
