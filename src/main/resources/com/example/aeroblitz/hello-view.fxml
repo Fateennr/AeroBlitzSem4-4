@@ -25,8 +25,8 @@
 <AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#restartGame" prefHeight="675.0" prefWidth="893.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aeroblitz.Board">
 
   <!-- Air Hockey Table -->
-  <Rectangle fill="#020326" height="580.0" layoutX="-35.0" layoutY="-40.0" width="770.0" x="50" y="50" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="594.0" layoutX="391.0" layoutY="3.0" width="17.0" />
+  <Rectangle fill="#020326" height="564.0" layoutX="-36.0" layoutY="-40.0" width="771.0" x="50" y="50" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="570.0" layoutX="403.0" layoutY="3.0" width="17.0" />
    <Rectangle fx:id="player1goalps" arcHeight="5.0" arcWidth="5.0" fill="#020326" height="150.0" layoutY="225.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="50.0" />
    <Rectangle fx:id="player2goalps" arcHeight="5.0" arcWidth="5.0" fill="#020326" height="150.0" layoutX="750.0" layoutY="225.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="50.0" />
    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="140.0" layoutY="230.0" strokeType="INSIDE" width="8.0" />
