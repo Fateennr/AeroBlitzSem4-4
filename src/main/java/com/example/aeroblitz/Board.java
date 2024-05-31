@@ -1,6 +1,7 @@
 package com.example.aeroblitz;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -87,91 +89,73 @@ public class Board {
 
 
 
-    private final AnimationTimer gameLoop = new AnimationTimer() { //game loop for running updates in the board
+    private final AnimationTimer gameLoop = new AnimationTimer() {
+        private static final int FPS = 120; // Desired frames per second
+        private static final long ONE_SECOND_NANOS = 1_000_000_000L;
+        private static final long FRAME_INTERVAL_NANOS = ONE_SECOND_NANOS / FPS;
+        private long lastUpdateTime = 0;
+
         @Override
         public void handle(long now) {
+            if (lastUpdateTime == 0) {
+                lastUpdateTime = now;
+                return;
+            }
 
+            long elapsedNanos = now - lastUpdateTime;
+            if (elapsedNanos >= FRAME_INTERVAL_NANOS) {
+                lastUpdateTime = now;
+                updateGame();
+            }
+        }
+
+        private void updateGame() {
             drawTrail();
 
             if (ballVelocity == 2) {
-
-
                 slowball.move();
                 slowball.draw();
-
-
-                // Update motion trail for the ball
                 updateMotionTrail(ball);
-
-                // Check for collisions
                 checkCollisionslow();
 
                 System.out.println("time " + score.getTime());
 
                 if (score.getTime() == 0) {
-                    gameEnded = true;
-                    gameLoop.stop();
-                    score.pauseTimer();
-
-                    if (score.player1 > score.player2) {
-                        winText.setText(String.format("Player 1 wins!!"));
-                        winText.setVisible(true); // Hide the win text
-                    } else if (score.player2 > score.player1) {
-                        winText.setText(String.format("Player 2 wins!!"));
-                        winText.setVisible(true); // Hide the win text
-                    } else {
-                        winText.setText(String.format("Its a Draw!!"));
-                        winText.setVisible(true); // Hide the win text
-                    }
-
-//                score.setTime(30);
-//                resetPositions();
-//                draw_scoreboard();
-                    System.out.println(score.player1);
-                    System.out.println(score.player2);
-
+                    endGame();
                 }
             } else {
-
                 ball.getCircle().setVisible(true);
-                // Update the position of the ball
                 ball.move();
                 ball.draw();
-
-                // Update motion trail for the ball
                 updateMotionTrail(ball);
-
-                // Check for collisions
                 checkCollision();
 
                 System.out.println("time " + score.getTime());
 
                 if (score.getTime() == 0) {
-                    gameEnded = true;
-                    gameLoop.stop();
-                    score.pauseTimer();
-
-                    if (score.player1 > score.player2) {
-                        winText.setText(String.format("Player 1 wins!!"));
-                        winText.setVisible(true); // Hide the win text
-                    } else if (score.player2 > score.player1) {
-                        winText.setText(String.format("Player 2 wins!!"));
-                        winText.setVisible(true); // Hide the win text
-                    } else {
-                        winText.setText(String.format("Its a Draw!!"));
-                        winText.setVisible(true); // Hide the win text
-                    }
-
-//                score.setTime(30);
-//                resetPositions();
-//                draw_scoreboard();
-                    System.out.println(score.player1);
-                    System.out.println(score.player2);
-
+                    endGame();
                 }
-
-
             }
+        }
+
+        private void endGame() {
+            gameEnded = true;
+            gameLoop.stop();
+            score.pauseTimer();
+
+            if (score.player1 > score.player2) {
+                winText.setText("Player 1 wins!!");
+                winText.setVisible(true);
+            } else if (score.player2 > score.player1) {
+                winText.setText("Player 2 wins!!");
+                winText.setVisible(true);
+            } else {
+                winText.setText("It's a Draw!!");
+                winText.setVisible(true);
+            }
+
+            System.out.println(score.player1);
+            System.out.println(score.player2);
         }
     };
 
@@ -281,82 +265,34 @@ public class Board {
 
         striker.draw(); //draw the striker
 
-//        if(striker.getID() == 2) {
-        if(true) {
+        if(striker.getID() == 2) {
+//        if(true) {
 
-            // Setting mouse control
-            c.setOnMousePressed(event -> pressed(event, striker));
-            c.setOnMouseDragged(event -> dragged(event, striker));
-            c.setOnMouseReleased(event -> released(event, striker));
+//            // Setting mouse control
+//            c.setOnMousePressed(event -> pressed(event, striker));
+//            c.setOnMouseDragged(event -> dragged(event, striker));
+//            c.setOnMouseReleased(event -> released(event, striker));
+
+//            MouseControl m1 = new MouseControl(c, striker);
+            MouseControl m1 = new MouseControl(striker2, c);
+
+            m1.start();
         }
         else
         {
+
+            KeyboardControl k1 = new KeyboardControl(striker, pane);
 
 //            // Setting keyboard control
 //            pane.setOnKeyPressed(event -> keyPressed(event, striker));
 //            pane.requestFocus(); // Ensure the pane has focus to receive key events
 
-//            striker.setOnKeyPressed(event ->
-//            {
-//                if(event.getCode() == )
-//            });
+//            KeyboardControl k1 = new KeyboardControl();
 
+            k1.start();
 
         }
     }
-
-//    private void keyPressed(KeyEvent event, Striker striker) {
-//        pressedKeys.add(event.getCode());
-//        moveStriker(striker);
-//    }
-//
-//    private void moveStriker(Striker striker)
-//    {
-//
-//        double deltaX = 0;
-//        double deltaY = 0;
-//
-//        if (pressedKeys.contains(KeyCode.UP))
-//        {
-//            System.out.println("Up provoked");
-//            deltaY -= 1;
-//        }
-//        if (pressedKeys.contains(KeyCode.LEFT)) deltaX -= 1;
-//        if (pressedKeys.contains(KeyCode.DOWN)) deltaY += 1;
-//        if (pressedKeys.contains(KeyCode.RIGHT)) deltaX += 1;
-//
-////        // Normalize diagonal movement
-////        if (deltaX != 0 && deltaY != 0)
-////        {
-////            double diagonalFactor = Math.sqrt(3.5);
-////            deltaX *= diagonalFactor;
-////            deltaY *= diagonalFactor;
-////        }
-//
-//        double newX = striker.getX() + deltaX * STRIKER_SPEED;
-//        double newY = striker.getY() + deltaY * STRIKER_SPEED;
-//
-////        // Boundary checking
-////        newX = Math.max(Math.min(newX, GAME_WIDTH - strikerSize / 2), strikerSize / 2);
-////        newY = Math.max(Math.min(newY, GAME_HEIGHT - strikerSize / 2), strikerSize / 2);
-//
-//        System.out.println("newX " + deltaX);
-//        System.out.println("newY " + deltaY);
-//        striker.setX(newX);
-//        striker.setY(newY);
-//        striker.draw();
-//    }
-
-//    private void moveStriker(Striker striker, double deltaX, double deltaY) {
-//        int speed = 10;
-//        double newX = striker.getX() + deltaX*speed;
-//        double newY = striker.getY() + deltaY*speed;
-//        // Update the position of the striker
-//        striker.setX(newX);
-//        striker.setY(newY);
-//        // Redraw the striker at its new position
-//        striker.draw();
-//    }
 
     //Collision physics
 
@@ -819,38 +755,7 @@ public class Board {
     }
 
 
-    private void released(MouseEvent event, Striker striker) {
 
-        long endTime = System.nanoTime();
-        double timeElapsed = (endTime - startTime) / 1_000_000_000.0; // Convert nanoseconds to seconds
-        double distanceX = event.getSceneX() - startX;
-        double distanceY = event.getSceneY() - startY;
-        double speedX = distanceX / timeElapsed; // Speed in pixels per second
-        double speedY = distanceY / timeElapsed; // Speed in pixels per second
-
-        System.out.println("Mouse Dragging Speed (X): " + speedX);
-        System.out.println("Mouse Dragging Speed (Y): " + speedY);
-    }
-
-    private void dragged(MouseEvent event, Striker striker) {
-
-        // determines the tasks when striker is dragged
-        double gridx = striker.getX() + event.getX();
-        double gridy = striker.getY() + event.getY();
-
-        System.out.println("x "+ gridx);
-        System.out.println("y "+ gridy);
-
-        striker.setX(gridx);
-        striker.setY(gridy);
-        striker.draw();
-    }
-
-    private void pressed(MouseEvent event, Striker striker) {
-        startX = event.getSceneX();
-        startY = event.getSceneY();
-        startTime = System.nanoTime();
-    }
 
     @FXML
     private void handleSlowOpponentButtonClick(ActionEvent actionEvent) {
@@ -948,4 +853,118 @@ public class Board {
         }
     }
 
+    class MouseControl extends Thread {
+        private Striker striker;
+        private Circle circle;
+
+        public MouseControl(Striker striker, Circle circle) {
+            this.striker = striker;
+            this.circle = circle;
+        }
+
+        @Override
+        public void run() {
+            circle.setOnMousePressed(event -> pressed(event, striker));
+            circle.setOnMouseDragged(event -> dragged(event, striker));
+            circle.setOnMouseReleased(event -> released(event, striker));
+        }
+
+        private void released(MouseEvent event, Striker striker) {
+
+            long endTime = System.nanoTime();
+            double timeElapsed = (endTime - startTime) / 1_000_000_000.0; // Convert nanoseconds to seconds
+            double distanceX = event.getSceneX() - startX;
+            double distanceY = event.getSceneY() - startY;
+            double speedX = distanceX / timeElapsed; // Speed in pixels per second
+            double speedY = distanceY / timeElapsed; // Speed in pixels per second
+
+            System.out.println("Mouse Dragging Speed (X): " + speedX);
+            System.out.println("Mouse Dragging Speed (Y): " + speedY);
+        }
+
+        private void dragged(MouseEvent event, Striker striker) {
+
+            // determines the tasks when striker is dragged
+            double gridx = striker.getX() + event.getX();
+            double gridy = striker.getY() + event.getY();
+
+            System.out.println("x "+ gridx);
+            System.out.println("y "+ gridy);
+
+            striker.setX(gridx);
+            striker.setY(gridy);
+            striker.draw();
+        }
+
+        private void pressed(MouseEvent event, Striker striker) {
+            startX = event.getSceneX();
+            startY = event.getSceneY();
+            startTime = System.nanoTime();
+        }
+    }
+
+    public class KeyboardControl extends Thread {
+        private Striker striker;
+        private Pane pane;
+        private Set<KeyCode> pressedKeys = new HashSet<>();
+        private static final double STRIKER_SPEED = 30.0;
+
+        public KeyboardControl(Striker striker, Pane pane) {
+            this.striker = striker;
+            this.pane = pane;
+        }
+
+        @Override
+        public void run() {
+            Platform.runLater(() -> {
+                pane.setOnKeyPressed(this::keyPressed);
+                pane.setOnKeyReleased(this::keyReleased);
+                pane.requestFocus(); // Ensure the pane has focus to receive key events
+            });
+        }
+
+        private void keyPressed(KeyEvent event) {
+            pressedKeys.add(event.getCode());
+            moveStriker();
+        }
+
+        private void keyReleased(KeyEvent event) {
+            pressedKeys.remove(event.getCode());
+            moveStriker();
+        }
+
+        private void moveStriker() {
+            double deltaX = 0;
+            double deltaY = 0;
+
+            if (pressedKeys.contains(KeyCode.UP)) deltaY -= 1;
+            if (pressedKeys.contains(KeyCode.LEFT)) deltaX -= 1;
+            if (pressedKeys.contains(KeyCode.DOWN)) deltaY += 1;
+            if (pressedKeys.contains(KeyCode.RIGHT)) deltaX += 1;
+
+            // Normalize diagonal movement
+            if (deltaX != 0 && deltaY != 0) {
+                double diagonalFactor = Math.sqrt(2) / 2;
+                deltaX *= diagonalFactor;
+                deltaY *= diagonalFactor;
+            }
+
+            double newX = striker.getX() + deltaX * STRIKER_SPEED;
+            double newY = striker.getY() + deltaY * STRIKER_SPEED;
+
+            // Boundary checking can be added here if needed
+            // newX = Math.max(Math.min(newX, GAME_WIDTH - strikerSize / 2), strikerSize / 2);
+            // newY = Math.max(Math.min(newY, GAME_HEIGHT - strikerSize / 2), strikerSize / 2);
+
+            striker.setX(newX);
+            striker.setY(newY);
+            striker.draw();
+        }
+    }
+
 }
+
+
+
+
+
