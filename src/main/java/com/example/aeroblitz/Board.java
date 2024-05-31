@@ -600,7 +600,7 @@ public class Board {
         }
 
         // Ball bounce off the left and right edges  & setting the goalpost
-        if (ball.getX() <= 0 && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier) {
+       if (ball.getX() <= 0 && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier) {
 
             score.player2++;
 
