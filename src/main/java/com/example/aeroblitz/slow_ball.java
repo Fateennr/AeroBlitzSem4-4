@@ -144,6 +144,11 @@ public class slow_ball extends Group
     {
         initialSpeed=speed;
     }
+
+    public double getInitialSpeed()
+    {
+        return initialSpeed;
+    }
 }
 
 
