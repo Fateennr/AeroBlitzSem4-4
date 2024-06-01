@@ -126,7 +126,7 @@ public class Board {
         {
             drawTrail();
 
-            if (ballVelocity == 2)
+            if (ballVelocity == slowball.getInitialSpeed())
             {
                 slowball.move();
                 slowball.draw();
@@ -334,7 +334,6 @@ public class Board {
 
     public void checkCollisionslow() 
     {
-
 
         int diameter = strikerSize/2;
         int ball_radius = BALL_DIAMETER/2;
@@ -1318,7 +1317,8 @@ public class Board {
 
     @FXML
     private void handleSlowOpponentButtonClick(ActionEvent actionEvent) {
-        if (slowballbool) {
+        if (slowballbool)
+        {
             slowballbool=false;
             isSlowed = true;
 
@@ -1328,7 +1328,7 @@ public class Board {
 
             Random random = new Random();
             slowball = new slow_ball(ball.getX(), ball.getY(), BALL_DIAMETER, c);
-            ballVelocity=slowball.getInitialSpeed();
+            ballVelocity= slowball.getInitialSpeed();
 
             ball.getCircle().setVisible(false);
 
@@ -1351,7 +1351,6 @@ public class Board {
 
                             Random random = new Random();
                             ball.getCircle().setVisible(true);
-
 
                         }
                     }
@@ -1506,10 +1505,10 @@ public class Board {
             double deltaX = 0;
             double deltaY = 0;
 
-            if (pressedKeys.contains(KeyCode.UP)) deltaY -= 1;
-            if (pressedKeys.contains(KeyCode.LEFT)) deltaX -= 1;
-            if (pressedKeys.contains(KeyCode.DOWN)) deltaY += 1;
-            if (pressedKeys.contains(KeyCode.RIGHT)) deltaX += 1;
+            if (pressedKeys.contains(KeyCode.W)) deltaY -= 1;
+            if (pressedKeys.contains(KeyCode.A)) deltaX -= 1;
+            if (pressedKeys.contains(KeyCode.S)) deltaY += 1;
+            if (pressedKeys.contains(KeyCode.D)) deltaX += 1;
 
             // Normalize diagonal movement
             if (deltaX != 0 && deltaY != 0) {

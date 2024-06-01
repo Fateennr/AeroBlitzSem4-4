@@ -41,7 +41,7 @@
       </effect>
    </Label>
 
-    <Button fx:id="slowOpponentButton" layoutX="40.0" layoutY="607.0" onAction="#handleSlowOpponentButtonClick" onMouseClicked="#handleSlowOpponentButtonClick" prefHeight="43.0" prefWidth="115.0" text="slow ball" />
+    <Button fx:id="slowOpponentButton" layoutX="40.0" layoutY="607.0" onAction="#handleSlowOpponentButtonClick" prefHeight="43.0" prefWidth="115.0" text="slow ball" />
     <Button layoutX="204.0" layoutY="607.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClick" text="freeze oponengt" />
     <Button layoutX="339.0" layoutY="616.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClick" text="goalpostbarrier" />
 </AnchorPane>
