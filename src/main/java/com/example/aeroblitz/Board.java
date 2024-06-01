@@ -26,6 +26,7 @@ public class Board {
     @FXML
     private AnchorPane pane;
 
+    private double prevxs1,prevys1,prevxs2,prevys2;
     private boolean frozen=true,slowballbool=true,goalpost=true;
 
     @FXML
@@ -127,9 +128,7 @@ public class Board {
                         winText.setVisible(true); // Hide the win text
                     }
 
-//                score.setTime(30);
-//                resetPositions();
-//                draw_scoreboard();
+
                     System.out.println(score.player1);
                     System.out.println(score.player2);
 
@@ -202,7 +201,12 @@ public class Board {
 
         // Initialize the board
         newStriker(100, 300, Color.RED, 1, striker1); // initial position of the strikers in the board
-        newStriker(700, 300, Color.GREEN,2, striker2);
+        newStriker2(700, 300, Color.GREEN,2, striker2);
+        prevxs1=100;
+        prevys1=300;
+        prevxs2=700;
+        prevys2=300;
+
         newBall();
         newslowBall();// initial position of the ball, it will start from any random position in the middle line of the board
         ballVelocity=ball.getspeed();
@@ -237,7 +241,7 @@ public class Board {
 
         Random random = new Random();
         ball = new Ball((GAME_WIDTH / 2) - (BALL_DIAMETER / 2),(GAME_HEIGHT/2) - (BALL_DIAMETER/2), BALL_DIAMETER, c);
-      //  ball=new Ball(36,32,BALL_DIAMETER,c);
+
         pane.getChildren().add(c);
         ball.draw();
 
@@ -300,6 +304,44 @@ public class Board {
             // Setting mouse control
            // c.setOnMousePressed(event -> pressed(event, striker));
             c.setOnMouseDragged(event -> dragged(event, striker));
+            c.setOnMouseReleased(event -> released(event, striker));
+        }
+        else
+        {
+
+//
+
+        }
+    }
+    public void newStriker2(int x, int y, Color color, int id, Striker striker) {
+        Circle c = new Circle();
+        Color neonColor = color.brighter().brighter().brighter();
+        c.setFill(Color.WHITE);
+        c.setStroke(neonColor);
+
+
+        // Set the stroke width
+        strokeWidth = 15.0; // Change this value as needed
+        c.setStrokeWidth(strokeWidth);
+
+        double radius = strikerSize / 3.0;
+
+        striker.setID(id);
+        striker.setX(x);
+        striker.setY(y);
+        striker.setColor(color);
+        striker.setRadius(radius);
+        striker.setCircle(c); // Assign the Circle object to the Striker
+        pane.getChildren().add(c);
+
+        striker.draw(); //draw the striker
+
+//        if(striker.getID() == 2) {
+        if(true) {
+
+            // Setting mouse control
+            // c.setOnMousePressed(event -> pressed(event, striker));
+            c.setOnMouseDragged(event -> draggeds2(event, striker));
             c.setOnMouseReleased(event -> released(event, striker));
         }
         else
@@ -420,44 +462,8 @@ public class Board {
             slowball.setXDirection(-slowball.getXVelocity());
         }
 
-        //collision between two strikers
-        if(intersects(striker1 , striker2))
-        {
-            double fDistance = Math.sqrt(getDistance(striker1.getX(),striker1.getY(),striker2.getX(),striker2.getY()));
-
-            double fOverlap = 0.5 * (fDistance-strikerSize);
-
-//            System.out.println("striker striker collision");
-            System.out.println(fDistance);
-            System.out.println(fOverlap);
-
-//
-            //setting striker1 (displacing towards neg direction
-            double finalx = fOverlap * (striker1.getX()-striker2.getX()) / fDistance;
-            striker1.setX(striker1.getX()-finalx);
 
 
-            double finaly = fOverlap * (striker1.getY()-striker2.getY()) / fDistance;
-            striker1.setY(striker1.getY()-finaly);
-
-            striker1.draw();
-
-//
-            //setting striker2 (displacing towards positive direction
-            double finalx2 = fOverlap * (striker1.getX()-striker2.getX()) / fDistance;
-            striker2.setX(striker2.getX()+finalx2);
-
-
-            double finaly2 = fOverlap * (striker1.getY()-striker2.getY()) / fDistance;
-            striker2.setY(striker2.getY()+finaly2);
-
-
-            striker2.draw();
-
-        }
-
-
-        // Collisions with the strikers
         if (intersectsslow(slowball, striker1) || intersectsslow(slowball, striker2) ) {
 
             BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
@@ -739,12 +745,10 @@ public class Board {
         }
 
 
-        if (ball.getY() <= 32 || ball.getY() >= (GAME_HEIGHT - 50)) {
-            ball.setYDirection(-ball.getYVelocity());
-        }
 
 
-       if (ball.getX() <= 36 && /*ball.getY() >= (220+ BALL_DIAMETER) && ball.getY() <= (360) &&*/ ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier) {
+
+       if (ball.getX() <= 36 && /*ball.getY() >= (220+ BALL_DIAMETER) && ball.getY() <= (360) &&*/ ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier && false) {
 
 
                score.player2++;
@@ -770,7 +774,7 @@ public class Board {
 
         }
 
-       else if (ball.getX() >= (GAME_WIDTH - 36) && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && true) {
+       else if (ball.getX() >= (GAME_WIDTH - 36) && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && false) {
 
            score.player1++;
            resetPositions();
@@ -833,7 +837,7 @@ public class Board {
 
         }*/
 
-        if (ball.getX() - ball_radius <= rectX + rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrier) {
+        if (ball.getX() - ball_radius <= rectX + rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrier ) {
             // Check collision with the top side of the rectangle
             if (ball.getY() - ball_radius <= rectY) {
                 lastCollisionTime = currentTime;
@@ -879,51 +883,44 @@ public class Board {
             }
         }
 
-      else if (ball.getX() <= 36 || ball.getX() >= (GAME_WIDTH - 36)) {
+
+
+
+
+
+
+        if (ball.getY() <= 32 || ball.getY() >= (GAME_HEIGHT - 50)) {
+            ball.setYDirection(-ball.getYVelocity());
+          //  ball.setXDirection(ball.getXVelocity() + (Math.random() - 0.5) * 0.1);
+            if(ball.getYVelocity()==0 || ball.getXVelocity()==0)
+            {
+                 Random random = new Random();
+                int randomXDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for x velocity
+                int randomYDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for y velocity
+                ball.setXDirection(randomXDirection * ball.getspeed());
+                ball.setYDirection(randomYDirection * ball.getspeed());
+          }
+
+        }
+        if (ball.getX() <= 36 || ball.getX() >= (GAME_WIDTH - 36)) {
             ball.setXDirection(-ball.getXVelocity());
+          //  ball.setYDirection(ball.getYVelocity() + (Math.random() - 0.5) * 0.1);
+
+            if(ball.getYVelocity()==0 || ball.getXVelocity()==0)
+            {
+                Random random = new Random();
+                int randomXDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for x velocity
+                int randomYDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for y velocity
+                ball.setXDirection(randomXDirection * ball.getspeed());
+                ball.setYDirection(randomYDirection * ball.getspeed());
+            }
         }
 
-
-
-        //collision between two strikers
-        if(intersects(striker1 , striker2))
-        {
-            double fDistance = Math.sqrt(getDistance(striker1.getX(),striker1.getY(),striker2.getX(),striker2.getY()));
-
-            double fOverlap = 0.5 * (fDistance-strikerSize);
-
-//            System.out.println("striker striker collision");
-            System.out.println(fDistance);
-            System.out.println(fOverlap);
-
-//
-            //setting striker1 (displacing towards neg direction
-            double finalx = fOverlap * (striker1.getX()-striker2.getX()) / fDistance;
-            striker1.setX(striker1.getX()-finalx);
-
-
-            double finaly = fOverlap * (striker1.getY()-striker2.getY()) / fDistance;
-            striker1.setY(striker1.getY()-finaly);
-
-            striker1.draw();
-
-//
-            //setting striker2 (displacing towards positive direction
-            double finalx2 = fOverlap * (striker1.getX()-striker2.getX()) / fDistance;
-            striker2.setX(striker2.getX()+finalx2);
-
-
-            double finaly2 = fOverlap * (striker1.getY()-striker2.getY()) / fDistance;
-            striker2.setY(striker2.getY()+finaly2);
-
-
-            striker2.draw();
-
-        }
 
 
         // Collisions with the strikers
-        if (intersects(ball, striker1) || intersects(ball, striker2) ) {
+        else if (intersects(ball, striker1) || intersectss2(ball, striker2) ) {
+
 
 
 
@@ -958,8 +955,8 @@ public class Board {
             angleDifference=(angleDifference+randomAngleOffset);
 
             // Adjust the direction of the ball based on the angle difference
-            double newBallXVelocity = Math.cos(angleDifference) * ball.getspeed() - Math.sin(angleDifference) * ball.getspeed();
-            double newBallYVelocity = Math.sin(angleDifference) * ball.getspeed() + Math.cos(angleDifference) * ball.getspeed();
+            double newBallXVelocity = Math.cos(angleDifference) * ball.getXVelocity() - Math.sin(angleDifference) * ball.getYVelocity();
+            double newBallYVelocity = Math.sin(angleDifference) * ball.getXVelocity() + Math.cos(angleDifference) * ball.getYVelocity();
 
             double newBallX = ball.getX() + newBallXVelocity;
             double newBallY = ball.getY() + newBallYVelocity;
@@ -1095,18 +1092,12 @@ public class Board {
 
             }
 
-            // Ensure the new position of the ball stays within the boundaries of the board
-            // Adjust the position if it goes beyond the boundaries
-            newBallX = Math.max(ball.getCircle().getRadius(), Math.min(newBallX, GAME_WIDTH - ball.getCircle().getRadius()));
-            newBallY = Math.max(ball.getCircle().getRadius(), Math.min(newBallY, GAME_HEIGHT - ball.getCircle().getRadius()));
 
-            if (newBallX >= ball.getCircle().getRadius() || newBallX == GAME_WIDTH - ball.getCircle().getRadius()) {
-                newBallX += newBallXVelocity;
-            }
-            if (newBallY >= ball.getCircle().getRadius() || newBallY == GAME_HEIGHT - ball.getCircle().getRadius()) {
-                newBallY += newBallYVelocity;
-            }
-            // Update the position of the ball
+            double perturbation = 0.1;  // Adjust this value as necessary
+            newBallXVelocity += (Math.random() - 0.5) * perturbation;
+            newBallYVelocity += (Math.random() - 0.5) * perturbation;
+
+
             ball.setX(newBallX);
             ball.setY(newBallY);
             // Update the ball's velocity
@@ -1180,12 +1171,43 @@ public class Board {
         double strikerMovementDirection = Math.atan2(striker1.getSpeedY(), striker1.getSpeedX());
 
         double collisionAngle = Math.atan2(relativeCollisionY, relativeCollisionX);
-        if (sqaure < sumOfRadiiSquared) {
+        if (sqaure < sumOfRadiiSquared && prevxs1!=gridx && prevys1!=gridy) {
             double movediff=Math.pow((sumOfRadiiSquared-sqaure),0.5);
+            striker.setX(gridx-movediff*Math.cos(strikerMovementDirection));
+            striker.setY(gridy-movediff*Math.sin(strikerMovementDirection));
+            prevxs1=gridx-movediff*Math.cos(strikerMovementDirection);
+            prevys1=gridy-movediff*Math.sin(strikerMovementDirection);
+            striker.draw();
 
+        }
+        return result;
+    }
 
-            striker.setX(gridx-20*Math.cos(strikerMovementDirection));
-            striker.setY(gridy-20*Math.sin(strikerMovementDirection));
+    private boolean intersectss2(Ball ball, Striker striker) {
+
+        Circle ballCircle = ball.getCircle();
+        Circle strikerCircle = striker.getCircle();
+        boolean result;
+        result= getDistance(striker.getX(),striker.getY(),ball.getX(),ball.getY()) <= Math.pow(ballCircle.getRadius() + strikerCircle.getRadius(),2);
+        double gridx = striker.getX();
+        double gridy = striker.getY();
+
+        double disx=ball.getX()-gridx;
+        double disy=ball.getY()-gridy;
+        double sqaure=disx*disx+disy*disy;
+
+        double sumOfRadiiSquared = Math.pow(ball.getCircle().getRadius() + striker.getCircle().getRadius(), 2);
+        double relativeCollisionX = ball.getX() - striker1.getX();
+        double relativeCollisionY = ball.getY() - striker1.getY();
+        double strikerMovementDirection = Math.atan2(striker1.getSpeedY(), striker1.getSpeedX());
+
+        double collisionAngle = Math.atan2(relativeCollisionY, relativeCollisionX);
+        if (sqaure < sumOfRadiiSquared && prevxs2!=gridx && prevys2!=gridy) {
+            double movediff=Math.pow((sumOfRadiiSquared-sqaure),0.5);
+            striker.setX(gridx-movediff*Math.cos(strikerMovementDirection));
+            striker.setY(gridy-movediff*Math.sin(strikerMovementDirection));
+            prevxs2=gridx-movediff*Math.cos(strikerMovementDirection);
+            prevys2=gridy-movediff*Math.sin(strikerMovementDirection);
             striker.draw();
 
         }
@@ -1196,9 +1218,7 @@ public class Board {
 
         Circle ballCircle = slowball.getCircle();
         Circle strikerCircle = striker.getCircle();
-//
-//        System.out.println(getDistance(striker.getX(),striker.getY(),ball.getX(),ball.getY()));
-//        System.out.println(Math.pow(ballCircle.getRadius() + strikerCircle.getRadius(),2));
+
 
         return getDistance(striker.getX(),striker.getY(),slowball.getX(),slowball.getY()) <= Math.pow(ballCircle.getRadius() + strikerCircle.getRadius(),2);
 
@@ -1275,9 +1295,48 @@ public class Board {
 
             striker.setX(gridx);
             striker.setY(gridy);
+            prevxs1=gridx;
+            prevys1=gridy;
             striker.draw();
         }
     }
+
+    private void draggeds2(MouseEvent event, Striker striker) {
+
+        // determines the tasks when striker is dragged
+        double gridx = striker.getX() + event.getX();
+        double gridy = striker.getY() + event.getY();
+
+        double disx=ball.getX()-gridx;
+        double disy=ball.getY()-gridy;
+        double sqaure=disx*disx+disy*disy;
+
+        double sumOfRadiiSquared = Math.pow(ball.getCircle().getRadius() + striker.getCircle().getRadius(), 2);
+        //double sumOfRadiiSquared =
+
+        double relativeCollisionX = ball.getX() - striker1.getX();
+        double relativeCollisionY = ball.getY() - striker1.getY();
+        double strikerMovementDirection = Math.atan2(striker1.getSpeedY(), striker1.getSpeedX());
+        double collisionAngle = Math.atan2(relativeCollisionY, relativeCollisionX);
+        if (sqaure < sumOfRadiiSquared) {
+
+            striker.setX(gridx);
+            striker.setY(gridy);
+        }
+
+
+        else
+        {
+
+            striker.setX(gridx);
+            striker.setY(gridy);
+            prevxs2=gridx;
+            prevys2=gridy;
+
+            striker.draw();
+        }
+    }
+
 
 
 
