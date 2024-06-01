@@ -89,30 +89,35 @@ public class Board {
 
 
 
-    private final AnimationTimer gameLoop = new AnimationTimer() {
+    private final AnimationTimer gameLoop = new AnimationTimer()
+    {
         private static final int FPS = 120; // Desired frames per second
         private static final long ONE_SECOND_NANOS = 1_000_000_000L;
         private static final long FRAME_INTERVAL_NANOS = ONE_SECOND_NANOS / FPS;
         private long lastUpdateTime = 0;
 
         @Override
-        public void handle(long now) {
+        public void handle(long now)
+        {
             if (lastUpdateTime == 0) {
                 lastUpdateTime = now;
                 return;
             }
 
             long elapsedNanos = now - lastUpdateTime;
-            if (elapsedNanos >= FRAME_INTERVAL_NANOS) {
+            if (elapsedNanos >= FRAME_INTERVAL_NANOS)
+            {
                 lastUpdateTime = now;
                 updateGame();
             }
         }
 
-        private void updateGame() {
+        private void updateGame()
+        {
             drawTrail();
 
-            if (ballVelocity == 2) {
+            if (ballVelocity == 2)
+            {
                 slowball.move();
                 slowball.draw();
                 updateMotionTrail(ball);
@@ -120,10 +125,14 @@ public class Board {
 
                 System.out.println("time " + score.getTime());
 
-                if (score.getTime() == 0) {
+                if (score.getTime() == 0)
+                {
                     endGame();
                 }
-            } else {
+
+            }
+            else
+            {
                 ball.getCircle().setVisible(true);
                 ball.move();
                 ball.draw();
@@ -132,13 +141,15 @@ public class Board {
 
                 System.out.println("time " + score.getTime());
 
-                if (score.getTime() == 0) {
+                if (score.getTime() == 0)
+                {
                     endGame();
                 }
             }
         }
 
-        private void endGame() {
+        private void endGame()
+        {
             gameEnded = true;
             gameLoop.stop();
             score.pauseTimer();

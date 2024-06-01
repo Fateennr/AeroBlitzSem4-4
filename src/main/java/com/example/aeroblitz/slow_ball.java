@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class slow_ball extends Group {
+public class slow_ball extends Group
+{
     private double x;
     private double y;
     private double radius;
