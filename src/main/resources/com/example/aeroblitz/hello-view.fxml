@@ -40,8 +40,14 @@
          <Glow />
       </effect>
    </Label>
-
-    <Button fx:id="slowOpponentButton" layoutX="40.0" layoutY="607.0" onAction="#handleSlowOpponentButtonClick" prefHeight="43.0" prefWidth="115.0" text="slow ball" />
-    <Button layoutX="204.0" layoutY="607.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClick" text="freeze oponengt" />
-    <Button layoutX="339.0" layoutY="616.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClick" text="goalpostbarrier" />
+    <Button fx:id="slowOpponentButton" layoutX="40.0" layoutY="607.0" onAction="#handleSlowOpponentButtonClick" onMouseClicked="#handleSlowOpponentButtonClick" prefHeight="43.0" prefWidth="115.0" text="slow ball play1" />
+   <Button layoutX="204.0" layoutY="607.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClick" text="freeze oponengt play1" />
+   <Button layoutX="351.0" layoutY="616.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClick" text="goalpostbarrier play 1" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="10.0" layoutX="-5.0" layoutY="370.0" strokeType="INSIDE" width="60.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="10.0" layoutX="-5.0" layoutY="220.0" strokeType="INSIDE" width="60.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="10.0" layoutX="745.0" layoutY="225.0" strokeType="INSIDE" width="60.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="10.0" layoutX="745.0" layoutY="365.0" strokeType="INSIDE" width="60.0" />
+   <Button layoutX="484.0" layoutY="616.0" mnemonicParsing="false" onAction="#handleSlowOpponentButtonClickplay2" text="slowball play 2" />
+   <Button layoutX="578.0" layoutY="594.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClickplay2" text="freeze opponent 2" />
+   <Button layoutX="728.0" layoutY="616.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClickplay2" text="goalpost play2" />
 </AnchorPane>

@@ -50,6 +50,8 @@ public class Ball extends Group {
         int randomYDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for y velocity
         setXDirection(randomXDirection * initialSpeed);
         setYDirection(randomYDirection * initialSpeed);
+        /*setXDirection((0));
+        setYDirection(-initialSpeed);*/
     }
 
     void setYDirection(double randomYDirection) {
