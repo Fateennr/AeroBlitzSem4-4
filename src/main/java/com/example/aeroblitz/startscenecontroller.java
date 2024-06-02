@@ -14,6 +14,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
@@ -46,7 +47,9 @@ public class startscenecontroller {
     private Label titleLabel;
 
     private Media sound;
-    public void initialize() {
+
+    public void initialize()
+    {
 
         // Create a timeline to animate the glow effect
         Timeline timeline = new Timeline(
@@ -58,7 +61,7 @@ public class startscenecontroller {
         timeline.play();
 
         // Load the image
-        Image image = new Image(getClass().getResourceAsStream("/hock.png"));
+        Image image = new Image(getClass().getResourceAsStream("/2dsgn.jpg"));
 
         // Set the loaded image to the ImageView
         if (image != null) {
@@ -84,7 +87,6 @@ public class startscenecontroller {
     }
 
 
-
     @FXML
     private void handleTurnOffSoundButtonClick() {
 
@@ -95,7 +97,7 @@ public class startscenecontroller {
 //                turnOffSoundButton.setVisible(false); // Hide the turn off sound button
 
                 soundon = false;
-                anchorPane.lookup("#circular-button").setStyle("-fx-background-color: #ff0000"); // Set red color
+                anchorPane.lookup("#circular-button").setStyle("-fx-background-color: #CDE8E5"); // Set white
             }
         }
         else
@@ -105,11 +107,13 @@ public class startscenecontroller {
 //                turnOnSoundButton.setVisible(false); // Hide the turn on sound button
 //                turnOffSoundButton.setVisible(true); // Show the turn off sound button
                 soundon = true;
-                anchorPane.lookup("#circular-button").setStyle("-fx-background-color: #00ff00"); // Set green color
+                anchorPane.lookup("#circular-button").setStyle("-fx-background-color:  #0CB7BE"); // Set green color
             }
 
         }
     }
+
+
     @FXML
     private void handleShowHighScoreButtonClick() {
         System.out.println("Show High Scores button clicked");
@@ -132,14 +136,7 @@ public class startscenecontroller {
             System.err.println("Failed to load highscoreshow.fxml.");
         }
     }
-    @FXML
-    private void handleTurnOnSoundButtonClick() {
-        if (mediaPlayer != null && mediaPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
-            mediaPlayer.play();
-            turnOnSoundButton.setVisible(false); // Hide the turn on sound button
-            turnOffSoundButton.setVisible(true); // Show the turn off sound button
-        }
-    }
+
 
     @FXML
     private void handleNewGameButtonClick()
@@ -162,41 +159,73 @@ public class startscenecontroller {
             System.err.println("Failed to load startscene.fxml.");
         }
     }
+
     @FXML
-    private void handleAboutUsButtonClick() {
+    private void handleAboutUsButtonClick()
+    {
+
         try {
-            // Load the About_Us.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("About_Us.fxml"));
-            Parent aboutUsRoot = loader.load();
 
-            // Get the current stage
-            Stage stage = (Stage) anchorPane.getScene().getWindow();
+            mediaPlayer.stop();
+            Parent root = FXMLLoader.load(getClass().getResource("About_Us.fxml"));
 
-            // Create a new scene with the loaded FXML file
-            Scene scene = new Scene(aboutUsRoot, 800, 600); // Set the width to 800 and height to 600
+            // Set up the primary stage
+            Stage primaryStage = new Stage();
+            primaryStage.setTitle("About Us"); // Set the title of the window
+            primaryStage.setScene(new Scene(root)); // Set the scene with a specific width and height
+            primaryStage.show(); // Display the window
 
-            // Set the new scene to the stage
-            stage.setScene(scene);
+            Stage currentStage = (Stage) anchorPane.getScene().getWindow();
+            currentStage.close();
 
-            // Optionally, set the title for the About Us window
-            stage.setTitle("About Us");
-
-            // Show the new scene
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            // Optionally, show an error message
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Could not load About Us page");
-            alert.setContentText("An error occurred while trying to load the About Us page.");
-            alert.showAndWait();
+            System.err.println("Failed to load startscene.fxml.");
         }
+
+
+//        try
+//        {
+//            mediaPlayer.stop();
+//
+////            // Load the About_Us.fxml file
+////            FXMLLoader loader = new FXMLLoader(getClass().getResource("About_Us.fxml"));
+////            Parent aboutUsRoot = loader.load();
+////
+////            // Get the current stage
+////            Stage stage = (Stage) anchorPane.getScene().getWindow();
+////
+////            // Create a new scene with the loaded FXML file
+////            Scene scene = new Scene(aboutUsRoot, 800, 600); // Set the width to 800 and height to 600
+////
+////            // Set the new scene to the stage
+////            stage.setScene(scene);
+////
+////            // Optionally, set the title for the About Us window
+////            stage.setTitle("About Us");
+////
+////            // Show the new scene
+////            stage.show();
+//
+//
+//
+//        }
+//        catch (IOException e)
+//        {
+//            e.printStackTrace();
+//            // Optionally, show an error message
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Error");
+//            alert.setHeaderText("Could not load About Us page");
+//            alert.setContentText("An error occurred while trying to load the About Us page.");
+//            alert.showAndWait();
+//        }
     }
 
 
     @FXML
-    private void handleQuitButtonClick() {
+    private void handleQuitButtonClick()
+    {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Quit Game");
         alert.setHeaderText("Are you sure you want to quit the game?");
@@ -211,6 +240,8 @@ public class startscenecontroller {
             // User clicked Cancel, do nothing
         }
     }
+
+
 }
 
 

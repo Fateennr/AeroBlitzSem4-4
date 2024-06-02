@@ -1,40 +1,52 @@
 /* Style for the newgame button */
 #start {
-    -fx-text-fill: #701414;
+    -fx-background-color: #0CB7BE;
+    -fx-text-fill: #CDE8E5;
+    -fx-background-radius: 80; /* Make the button circular */
+
 }
 
 /* Hover effect for the start button */
-#start:hover {
-    -fx-background-color: #701414; /* Darker blue on hover */
+#start:hover
+{
+    -fx-background-color: #5B0202; /* Darker blue on hover */
     -fx-text-fill: #ffffff;
 }
 
 
 
-#newgame {
--fx-text-fill: #701414;
+#newgame
+{
+    -fx-background-color: #0CB7BE;
+    -fx-text-fill: #CDE8E5;
+    -fx-background-radius: 80; /* Make the button circular */
 }
 
 /* Hover effect for the newgame button */
 #newgame:hover {
-    -fx-background-color: #701414; /* Darker blue on hover */
+    -fx-background-color: #5B0202; /* Darker blue on hover */
     -fx-text-fill: #ffffff;
 }
 
 
 /* Style for the quit button */
-#quit {
--fx-text-fill: #701414;
+#quit
+{
+    -fx-text-fill: #CDE8E5;
+    -fx-background-radius: 80; /* Make the button circular */
+    -fx-background-color: #0CB7BE;
+
+
 }
 
 /* Hover effect for the quit button */
 #quit:hover {
-    -fx-background-color: #701414; /* Darker blue on hover */
+    -fx-background-color: #5B0202; /* Darker blue on hover */
     -fx-text-fill: #ffffff;
 }
 
 #circular-button {
-    -fx-background-color: #00ff00; /* Change the background color as needed */
+    -fx-background-color:  #0CB7BE; /* Change the background color as needed */
     -fx-text-fill: white; /* Change the text color as needed */
     -fx-background-radius: 50%; /* Make the button circular */
     -fx-border-radius: 50%; /* Make the border circular */
