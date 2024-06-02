@@ -103,6 +103,9 @@ public class Board
     private boolean goalpostbarrier = false;
     private boolean goalpostbarrierplay2 = false;
 
+    private final Database_Connection database = new Database_Connection();
+
+
 
     private final AnimationTimer gameLoop = new AnimationTimer() {
         private static final int FPS = 120; // Desired frames per second
@@ -124,7 +127,8 @@ public class Board
             }
         }
 
-        private void updateGame() {
+        private void updateGame()
+        {
             drawTrail();
 
             if (ballVelocity == slowball.getInitialSpeed()) {
@@ -136,7 +140,8 @@ public class Board
                 System.out.println("time " + score.getTime());
 
 
-                if (score.getTime() == 0) {
+                if (score.getTime() == 0)
+                {
                     gameEnded = true;
 
                     frozen = true;
@@ -159,23 +164,32 @@ public class Board
                     gameLoop.stop();
                     score.pauseTimer();
 
-                    if (score.player1 > score.player2) {
+                    if (score.player1 > score.player2)
+                    {
                         winText.setText(String.format("Player 1 wins!!"));
                         winText.setVisible(true); // Hide the win text
-                    } else if (score.player2 > score.player1) {
+                    } else if (score.player2 > score.player1)
+                    {
                         winText.setText(String.format("Player 2 wins!!"));
                         winText.setVisible(true); // Hide the win text
-                    } else {
+                    }
+                    else
+                    {
                         winText.setText(String.format("Its a Draw!!"));
                         winText.setVisible(true); // Hide the win text
                     }
 
 
+                    database.saveScore("Player1", score.player1);
+                    database.saveScore("Player2", score.player2);
+
                     System.out.println(score.player1);
                     System.out.println(score.player2);
                 }
 
-            } else {
+            }
+            else
+            {
                 ball.getCircle().setVisible(true);
                 ball.move();
                 ball.draw();
@@ -185,7 +199,8 @@ public class Board
                 System.out.println("time " + score.getTime());
 
 
-                if (score.getTime() == 0) {
+                if (score.getTime() == 0)
+                {
                     gameEnded = true;
                     goalpostbarrier = false;
                     isSlowed = false;
@@ -201,16 +216,23 @@ public class Board
                     gameLoop.stop();
                     score.pauseTimer();
 
-                    if (score.player1 > score.player2) {
+                    if (score.player1 > score.player2)
+                    {
                         winText.setText(String.format("Player 1 wins!!"));
                         winText.setVisible(true); // Hide the win text
-                    } else if (score.player2 > score.player1) {
+                    } else if (score.player2 > score.player1)
+                    {
                         winText.setText(String.format("Player 2 wins!!"));
                         winText.setVisible(true); // Hide the win text
-                    } else {
+                    } else
+                    {
                         winText.setText(String.format("Its a Draw!!"));
                         winText.setVisible(true); // Hide the win text
                     }
+
+
+                    database.saveScore("Player_green", score.player1);
+                    database.saveScore("Player_blue", score.player2);
 
 //                score.setTime(30);
 //                resetPositions();
@@ -221,7 +243,8 @@ public class Board
             }
         }
 
-        private void endGame() {
+        private void endGame()
+        {
             gameEnded = true;
             gameLoop.stop();
             score.pauseTimer();
@@ -243,7 +266,8 @@ public class Board
     };
 
     @FXML
-    public void initialize() {
+    public void initialize()
+    {
 
         canvas = new Canvas(GAME_WIDTH, GAME_HEIGHT); // Adjust the size as needed
 
@@ -1651,7 +1675,8 @@ public class Board
     }
 
     @FXML
-    private void handleSlowOpponentButtonClickplay2(ActionEvent actionEvent) {
+    private void handleSlowOpponentButtonClickplay2(ActionEvent actionEvent)
+    {
         if (slowballboolplay2) {
             slowballboolplay2 = false;
             isSlowed = true;

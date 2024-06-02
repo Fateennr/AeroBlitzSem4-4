@@ -52,5 +52,6 @@
             <Font name="Dubai Medium" size="69.0" />
          </font>
       </Label>
+      <Button layoutX="561.0" layoutY="38.0" mnemonicParsing="false" onAction="#handleShowHighScoreButtonClick" prefHeight="25.0" prefWidth="103.0" style="-fx-background-radius: 30;" text="top scores " />
     </children>
 </AnchorPane>
