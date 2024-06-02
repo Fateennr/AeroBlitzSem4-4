@@ -22,15 +22,14 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#restartGame" prefHeight="675.0" prefWidth="893.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aeroblitz.Board">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#restartGame" prefHeight="675.0" prefWidth="800.0" style="-fx-background-color: #000000" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aeroblitz.Board">
 
   <!-- Air Hockey Table -->
-  <Rectangle fill="#020326" height="564.0" layoutX="-36.0" layoutY="-40.0" width="771.0" x="50" y="50" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="570.0" layoutX="403.0" layoutY="3.0" width="17.0" />
-   <Rectangle fx:id="player1goalps" arcHeight="5.0" arcWidth="5.0" fill="#020326" height="150.0" layoutY="225.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="50.0" />
-   <Rectangle fx:id="player2goalps" arcHeight="5.0" arcWidth="5.0" fill="#020326" height="150.0" layoutX="750.0" layoutY="225.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0" width="50.0" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="140.0" layoutY="230.0" strokeType="INSIDE" width="8.0" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="140.0" layoutX="795.0" layoutY="230.0" strokeType="INSIDE" width="5.0" />
+  <Rectangle fx:id="boardneww" height="564.0" layoutX="-36.0" layoutY="-40.0" width="771.0" x="50" y="50" />
+   <Rectangle fx:id="player1goalps" arcHeight="5.0" arcWidth="5.0" height="150.0" layoutY="225.0" stroke="#15aef1" strokeType="INSIDE" strokeWidth="5.0" width="50.0" />
+   <Rectangle fx:id="player2goalps" arcHeight="5.0" arcWidth="5.0" height="150.0" layoutX="750.0" layoutY="225.0" stroke="#15afe1" strokeType="INSIDE" strokeWidth="5.0" width="50.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="156.0" layoutY="220.0" strokeType="INSIDE" width="5.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="140.0" layoutX="795.0" layoutY="230.0" strokeType="INSIDE" width="5.0" />
    <Circle fill="DODGERBLUE" layoutX="-75.0" layoutY="-67.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
    <Label fx:id="winText" alignment="CENTER" contentDisplay="RIGHT" layoutX="230.0" layoutY="292.0" prefHeight="51.0" prefWidth="340.0" textAlignment="CENTER" textFill="#ffff02">
       <font>
@@ -40,14 +39,16 @@
          <Glow />
       </effect>
    </Label>
-    <Button fx:id="slowOpponentButton" layoutX="40.0" layoutY="607.0" onAction="#handleSlowOpponentButtonClick" onMouseClicked="#handleSlowOpponentButtonClick" prefHeight="43.0" prefWidth="115.0" text="slow ball play1" />
-   <Button layoutX="204.0" layoutY="607.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClick" text="freeze oponengt play1" />
-   <Button layoutX="351.0" layoutY="616.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClick" text="goalpostbarrier play 1" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="10.0" layoutX="-5.0" layoutY="370.0" strokeType="INSIDE" width="60.0" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="10.0" layoutX="-5.0" layoutY="220.0" strokeType="INSIDE" width="60.0" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="10.0" layoutX="745.0" layoutY="225.0" strokeType="INSIDE" width="60.0" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ff1f32" height="10.0" layoutX="745.0" layoutY="365.0" strokeType="INSIDE" width="60.0" />
-   <Button layoutX="484.0" layoutY="616.0" mnemonicParsing="false" onAction="#handleSlowOpponentButtonClickplay2" text="slowball play 2" />
-   <Button layoutX="578.0" layoutY="594.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClickplay2" text="freeze opponent 2" />
-   <Button layoutX="728.0" layoutY="616.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClickplay2" text="goalpost play2" />
+
+    <Button fx:id="slowOpponentButton" layoutX="230.0" layoutY="574.0" minHeight="34.0" minWidth="35.0" onAction="#handleSlowOpponentButtonClick" onMouseClicked="#handleSlowOpponentButtonClick" prefHeight="50.0" prefWidth="50.0" styleClass="circularslow-button" stylesheets="@../../../button.css" />
+   <Button layoutX="73.0" layoutY="574.0" maxWidth="46.0" minHeight="40.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClick" prefHeight="40.0" prefWidth="46.0" styleClass="circularfreeze-button" stylesheets="@../../../button.css" />
+   <Button layoutX="154.0" layoutY="574.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClick" styleClass="circulargoalpost-button" stylesheets="@../../../button.css" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="10.0" layoutX="-5.0" layoutY="370.0" strokeType="INSIDE" width="60.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="10.0" layoutX="-5.0" layoutY="220.0" strokeType="INSIDE" width="60.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fff0f1" height="10.0" layoutX="745.0" layoutY="225.0" strokeType="INSIDE" width="60.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="10.0" layoutX="745.0" layoutY="365.0" strokeType="INSIDE" width="60.0" />
+   <Button layoutX="533.0" layoutY="574.0" mnemonicParsing="false" onAction="#handleSlowOpponentButtonClickplay2" styleClass="circularslow-button" stylesheets="@../../../button.css" />
+   <Button layoutX="699.0" layoutY="574.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClickplay2" styleClass="circularfreeze-button" stylesheets="@../../../button.css" />
+   <Button layoutX="612.0" layoutY="574.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClickplay2" styleClass="circulargoalpost-button" stylesheets="@../../../button.css" />
+
 </AnchorPane>
