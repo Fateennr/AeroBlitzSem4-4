@@ -13,10 +13,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import javafx.scene.image.Image;
 
 import java.util.*;
 
@@ -25,6 +27,9 @@ public class Board {
 
     @FXML
     private AnchorPane pane;
+
+    @FXML
+    private Rectangle boardneww;
 
     private double prevxs1,prevys1,prevxs2,prevys2;
     private boolean frozen=true,slowballbool=true,goalpost=true;
@@ -218,6 +223,11 @@ public class Board {
         canvas = new Canvas(GAME_WIDTH, GAME_HEIGHT); // Adjust the size as needed
 
         lastUpdateTime = System.nanoTime();
+        Image ballImage = new Image(getClass().getResourceAsStream("/board.png"));
+        ImagePattern ballPattern = new ImagePattern(ballImage);
+        boardneww.setFill(ballPattern);
+
+
 
         gc = canvas.getGraphicsContext2D();
         gc1 = canvas.getGraphicsContext2D();
@@ -301,10 +311,15 @@ public class Board {
 
         Circle c = new Circle(); // before passing it to the ball constructor first we are creating a circle
         c.setFill(Color.YELLOW);
-        c.setStroke(Color.WHITE);
+        c.setStroke(Color.BLACK);
+      //  Image ballImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("src/main/resources/com/example/aeroblitz/ball.jpg")));
+       // Image ballImage = new Image("src/main/resources/com/example/aeroblitz/ball.jpg"); // Update the path to your image file
+        Image ballImage = new Image(getClass().getResourceAsStream("/ballred.jpg"));
+        ImagePattern ballPattern = new ImagePattern(ballImage);
+        c.setFill(ballPattern);
 
         Random random = new Random();
-        ball = new Ball((GAME_WIDTH / 2) - (BALL_DIAMETER / 2),(GAME_HEIGHT/2) - (BALL_DIAMETER/2), BALL_DIAMETER, c);
+        ball = new Ball((GAME_WIDTH / 2) - (BALL_DIAMETER / 2),(GAME_HEIGHT/2) - (BALL_DIAMETER/2)-16, BALL_DIAMETER, c);
       //  ball=new Ball(GAME_WIDTH,GAME_HEIGHT-60,BALL_DIAMETER,c);
         pane.getChildren().add(c);
         ball.draw();
@@ -329,8 +344,11 @@ public class Board {
     public void newslowBall() {
 
         Circle c = new Circle(); // before passing it to the ball constructor first we are creating a circle
-        c.setFill(Color.YELLOW);
-        c.setStroke(Color.WHITE);
+
+        c.setStroke(Color.BLACK);
+        Image ballImage = new Image(getClass().getResourceAsStream("/ballred.jpg"));
+        ImagePattern ballPattern = new ImagePattern(ballImage);
+        c.setFill(ballPattern);
 
         Random random = new Random();
         slowball = new slow_ball(ball.getX(), ball.getY(), BALL_DIAMETER, c);
@@ -343,14 +361,22 @@ public class Board {
         Circle c = new Circle();
         Color neonColor = color.brighter().brighter().brighter();
         c.setFill(Color.WHITE);
-        c.setStroke(neonColor);
+        //c.setStroke(neonColor);
 
 
         // Set the stroke width
         strokeWidth = 15.0; // Change this value as needed
-        c.setStrokeWidth(strokeWidth);
+        Image ballImage = new Image(getClass().getResourceAsStream("/cropped-str1.jpg"));
+        ImagePattern ballPattern = new ImagePattern(ballImage);
+        c.setFill(ballPattern);
+       // c.setStrokeWidth(strokeWidth);
 
-        double radius = strikerSize / 3.0;
+
+
+       // double radius = strikerSize / 3.0;
+      //  double radius=strikerSize/3.0+15;
+        double radius=48.33;
+
 
         striker.setID(id);
         striker.setX(x);
@@ -381,14 +407,19 @@ public class Board {
         Circle c = new Circle();
         Color neonColor = color.brighter().brighter().brighter();
         c.setFill(Color.WHITE);
-        c.setStroke(neonColor);
+       // c.setStroke(neonColor);
 
 
         // Set the stroke width
         strokeWidth = 15.0; // Change this value as needed
-        c.setStrokeWidth(strokeWidth);
+        Image ballImage = new Image(getClass().getResourceAsStream("/str.jpg"));
+        ImagePattern ballPattern = new ImagePattern(ballImage);
+        c.setFill(ballPattern);
+      //  c.setStrokeWidth(strokeWidth);
 
-        double radius = strikerSize / 3.0;
+       // double radius = strikerSize / 3.0;
+
+        double radius=48.33;
 
         striker.setID(id);
         striker.setX(x);
@@ -1449,7 +1480,7 @@ public class Board {
 
         // Reset positions for striker1 and striker2
         newStriker(100, 300, Color.RED,1, striker1); // initial position of the strikers in the board
-        newStriker(700, 300, Color.GREEN,2, striker2);
+        newStriker2(700, 300, Color.GREEN,2, striker2);
 
         // Reset ball position
         newBall();
@@ -1703,6 +1734,9 @@ public class Board {
 
                 // Disable mouse events for the opponent striker
                 striker2.getCircle().setDisable(true);
+                Image ballImage = new Image(getClass().getResourceAsStream("/cropped-frozen_s.png"));
+                ImagePattern ballPattern = new ImagePattern(ballImage);
+                striker2.getCircle().setFill(ballPattern);
 
                 // Start a timeline to unfreeze the opponent striker after 5 seconds
                 Timeline timeline = new Timeline(new KeyFrame(
@@ -1715,6 +1749,9 @@ public class Board {
 
                                 // Enable mouse events for the opponent striker
                                 striker2.getCircle().setDisable(false);
+                                Image ballImage = new Image(getClass().getResourceAsStream("/str.jpg"));
+                                ImagePattern ballPattern = new ImagePattern(ballImage);
+                                striker2.getCircle().setFill(ballPattern);
                             }
                         }
                 ));
@@ -1810,6 +1847,9 @@ public class Board {
 
                 // Disable mouse events for the opponent striker
                 striker1.getCircle().setDisable(true);
+                Image ballImage = new Image(getClass().getResourceAsStream("/cropped-frozen.png"));
+                ImagePattern ballPattern = new ImagePattern(ballImage);
+                striker1.getCircle().setFill(ballPattern);
 
                 // Start a timeline to unfreeze the opponent striker after 5 seconds
                 Timeline timeline = new Timeline(new KeyFrame(
@@ -1822,6 +1862,9 @@ public class Board {
 
                                 // Enable mouse events for the opponent striker
                                 striker1.getCircle().setDisable(false);
+                                Image ballImage = new Image(getClass().getResourceAsStream("/cropped-str1.jpg"));
+                                ImagePattern ballPattern = new ImagePattern(ballImage);
+                                striker1.getCircle().setFill(ballPattern);
                             }
                         }
                 ));
