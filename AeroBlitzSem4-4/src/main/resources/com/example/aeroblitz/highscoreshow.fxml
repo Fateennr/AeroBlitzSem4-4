@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="541.0" prefWidth="600.0" style="-fx-background-color: #000435;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.aeroblitz.HighScoreController">
+   <children>
+      <Label layoutX="222.0" layoutY="14.0" prefHeight="47.0" prefWidth="156.0" text="HIGH SCORES">
+         <font>
+            <Font name="Berlin Sans FB Demi Bold" size="24.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8517350398403614" endY="1.0" startX="0.8422713069133578" startY="0.28391167192429023">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.29456356167793274" green="0.7155439853668213" blue="0.7456140518188477" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <VBox fx:id="scoresVBox" layoutX="100.0" layoutY="89.0" prefHeight="60.0" prefWidth="400.0">
+         <children>
+            <HBox prefHeight="61.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label alignment="CENTER" prefHeight="60.0" prefWidth="205.0" styleClass="label-style" stylesheets="@../../../buttons.css" text="Player Name" textAlignment="CENTER" textFill="#fffefe" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="60.0" prefWidth="209.0" styleClass="label-style" stylesheets="@../../../buttons.css" text="Score" textFill="WHITE" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+         </children></VBox>
+      <Button layoutX="33.0" layoutY="26.0" mnemonicParsing="false" onAction="#handleBackButtonClick" style="-fx-background-color: #FFFAE6;" text="BACK">
+         <font>
+            <Font name="Berlin Sans FB Demi Bold" size="12.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.8517350398403614" endY="1.0" startX="0.8422713069133578" startY="0.28391167192429023">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.29456356167793274" green="0.7155439853668213" blue="0.7456140518188477" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.3070175349712372" green="0.2938145399093628" blue="0.2861706614494324" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Button>
+   </children>
+</AnchorPane>
