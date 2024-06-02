@@ -162,6 +162,38 @@ public class startscenecontroller {
             System.err.println("Failed to load startscene.fxml.");
         }
     }
+    @FXML
+    private void handleAboutUsButtonClick() {
+        try {
+            // Load the About_Us.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("About_Us.fxml"));
+            Parent aboutUsRoot = loader.load();
+
+            // Get the current stage
+            Stage stage = (Stage) anchorPane.getScene().getWindow();
+
+            // Create a new scene with the loaded FXML file
+            Scene scene = new Scene(aboutUsRoot, 800, 600); // Set the width to 800 and height to 600
+
+            // Set the new scene to the stage
+            stage.setScene(scene);
+
+            // Optionally, set the title for the About Us window
+            stage.setTitle("About Us");
+
+            // Show the new scene
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Optionally, show an error message
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Could not load About Us page");
+            alert.setContentText("An error occurred while trying to load the About Us page.");
+            alert.showAndWait();
+        }
+    }
+
 
     @FXML
     private void handleQuitButtonClick() {

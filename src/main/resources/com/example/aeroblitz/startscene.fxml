@@ -13,7 +13,7 @@
 
     <children>
       <ImageView fx:id="imageView" fitHeight="600.0" fitWidth="397.0" layoutX="403.0" layoutY="-30.0" pickOnBounds="true" y="30.0" />
-        <Button id="start" fx:id="start" layoutX="60.0" layoutY="260.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="294.0" stylesheets="@../../../buttons.css" text="ABOUT US" textFill="#701414">
+        <Button id="start" fx:id="start" layoutX="60.0" layoutY="260.0" mnemonicParsing="false" onAction="#handleAboutUsButtonClick" prefHeight="63.0" prefWidth="294.0" stylesheets="@../../../buttons.css" text="ABOUT US" textFill="#701414">
             <font>
                 <Font name="Bookshelf Symbol 7" size="36.0" />
             </font>
