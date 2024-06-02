@@ -56,4 +56,17 @@
 
 }
 
+.label-style
+{
+    -fx-text-fill: #FFF;
+    -fx-font-family: 'Berlin Sans FB';
+    -fx-font-size: 18;
+    -fx-border-color: #FFF;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+    -fx-background-color: #24213E;
+     -fx-border-radius: 5px;
+     -fx-padding: 10px;
+     -fx-background-radius: 5px;
+}
 

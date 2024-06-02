@@ -4,6 +4,7 @@ module com.example.aeroblitz {
     requires java.datatransfer;
     requires java.desktop;
     requires javafx.media;
+    requires java.sql;
 
 
     opens com.example.aeroblitz to javafx.fxml;

@@ -26,7 +26,7 @@ public class Ball extends Group {
     Random random;
     double xVelocity;
     double yVelocity;
-    double initialSpeed = 5;
+    double initialSpeed = 7;
 
     public Ball(double x, double y, double radius, Circle c) {
         this.x = x;
@@ -50,6 +50,8 @@ public class Ball extends Group {
         int randomYDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for y velocity
         setXDirection(randomXDirection * initialSpeed);
         setYDirection(randomYDirection * initialSpeed);
+        /*setXDirection((0));
+        setYDirection(-initialSpeed);*/
     }
 
     void setYDirection(double randomYDirection) {
@@ -143,6 +145,23 @@ public class Ball extends Group {
     {
         initialSpeed=speed;
     }
+
+    public double getspeed()
+    {
+        return initialSpeed;
+    }
+
+
+    public void update(double deltaTime) {
+        // Update the position of the ball based on its velocity and the elapsed time
+        double newX = x + xVelocity * deltaTime;
+        double newY = y + yVelocity * deltaTime;
+
+        // Update the position of the ball
+        setX(newX);
+        setY(newY);
+    }
+
 }
 
 
