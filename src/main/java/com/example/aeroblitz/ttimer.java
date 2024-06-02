@@ -55,7 +55,13 @@ public class ttimer {
         }
     }
 
-    public int getTimeSeconds() {
+    public int getTimeSeconds()
+    {
+        if(timeSeconds <0 )
+        {
+            timeSeconds = 0;
+        }
+
         return timeSeconds;
     }
     public int setTimeSeconds(int timeSeconds) {
