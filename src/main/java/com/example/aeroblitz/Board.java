@@ -1,6 +1,7 @@
 package com.example.aeroblitz;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -22,7 +24,8 @@ import javafx.scene.image.Image;
 
 import java.util.*;
 
-public class Board {
+public class Board
+{
 
 
     @FXML
@@ -34,21 +37,21 @@ public class Board {
     private double prevxs1,prevys1,prevxs2,prevys2;
     private boolean frozen=true,slowballbool=true,goalpost=true;
 
-    private boolean frozenplay2=true,slowballboolplay2=true,goalpostplay2=true;
+    private boolean frozenplay2 = true, slowballboolplay2 = true, goalpostplay2 = true;
 
     @FXML
-    private Rectangle player1goalps,player2goalps;
+    private Rectangle player1goalps, player2goalps;
 
     @FXML
     private Button slowOpponentButton;
-    private boolean isOpponentStrikerFrozen=false;
+    private boolean isOpponentStrikerFrozen = false;
 
 
     private boolean blastEffectActive = false;
 
     private long lastCollisionTime = 0;
 
-    private long lastUpdateTime=0;
+    private long lastUpdateTime = 0;
     private static final long COLLISION_COOLDOWN = 500;
 
     private final int GAME_WIDTH = 800; //adjust the size of the board
@@ -56,10 +59,9 @@ public class Board {
     private final int BALL_DIAMETER = 20; //adjust the size of the ball
 
 
-
     private final Set<KeyCode> pressedKeys = new HashSet<>(); // for keyboard movements in striker2
 
-    private  double STRIKER_SPEED = 2; // speed of the striker2
+    private double STRIKER_SPEED = 2; // speed of the striker2
     private double goalpos = 230;
 
     private Striker striker1;
@@ -67,7 +69,7 @@ public class Board {
     private Ball ball;
     private slow_ball slowball;
 
-    private double ballVelocity ; // Initial ball velocity
+    private double ballVelocity; // Initial ball velocity
     private int slowVelocity = 2;
     private boolean isSlowed = false;
     private int strikerSize = 100; // adjust the size of the striker, indicates the diameter
@@ -103,39 +105,60 @@ public class Board {
 
     private boolean gameEnded = false;
 
-    private boolean goalpostbarrier=false;
-    private  boolean goalpostbarrierplay2=false;
+    private boolean goalpostbarrier = false;
+    private boolean goalpostbarrierplay2 = false;
+
+    private final Database_Connection database = new Database_Connection();
 
 
 
-    private final AnimationTimer gameLoop = new AnimationTimer() { //game loop for running updates in the board
+    private final AnimationTimer gameLoop = new AnimationTimer() {
+        private static final int FPS = 120; // Desired frames per second
+        private static final long ONE_SECOND_NANOS = 1_000_000_000L;
+        private static final long FRAME_INTERVAL_NANOS = ONE_SECOND_NANOS / FPS;
+        private long lastUpdateTime = 0;
+
         @Override
         public void handle(long now) {
+            if (lastUpdateTime == 0) {
+                lastUpdateTime = now;
+                return;
+            }
 
+            long elapsedNanos = now - lastUpdateTime;
+            if (elapsedNanos >= FRAME_INTERVAL_NANOS) {
+                lastUpdateTime = now;
+                updateGame();
+            }
+        }
+
+        private void updateGame()
+        {
             drawTrail();
 
             if (ballVelocity == slowball.getInitialSpeed()) {
-
                 slowball.move();
                 slowball.draw();
-
+                updateMotionTrail(ball);
                 checkCollisionslow();
 
                 System.out.println("time " + score.getTime());
 
-                if (score.getTime() == 0) {
+
+                if (score.getTime() == 0)
+                {
                     gameEnded = true;
 
-                    frozen=true;
-                    frozenplay2=true;
-                    slowballbool=true;
-                    slowballboolplay2=true;
+                    frozen = true;
+                    frozenplay2 = true;
+                    slowballbool = true;
+                    slowballboolplay2 = true;
 
-                    goalpost=true;
-                    goalpostplay2=true;
-                    goalpostbarrier=false;
-                    isSlowed=false;
-                    isOpponentStrikerFrozen=false;
+                    goalpost = true;
+                    goalpostplay2 = true;
+                    goalpostbarrier = false;
+                    isSlowed = false;
+                    isOpponentStrikerFrozen = false;
                     player1goalps.setStroke(Color.WHITE);
                     slowball.getCircle().setVisible(false);
 
@@ -146,42 +169,47 @@ public class Board {
                     gameLoop.stop();
                     score.pauseTimer();
 
-                    if (score.player1 > score.player2) {
+                    if (score.player1 > score.player2)
+                    {
                         winText.setText(String.format("Player 1 wins!!"));
                         winText.setVisible(true); // Hide the win text
-                    } else if (score.player2 > score.player1) {
+                    } else if (score.player2 > score.player1)
+                    {
                         winText.setText(String.format("Player 2 wins!!"));
                         winText.setVisible(true); // Hide the win text
-                    } else {
+                    }
+                    else
+                    {
                         winText.setText(String.format("Its a Draw!!"));
                         winText.setVisible(true); // Hide the win text
                     }
 
 
+                    database.saveScore("Player1", score.player1);
+                    database.saveScore("Player2", score.player2);
+
                     System.out.println(score.player1);
                     System.out.println(score.player2);
-
                 }
-            } else {
 
+            }
+            else
+            {
                 ball.getCircle().setVisible(true);
-                // Update the position of the ball
                 ball.move();
                 ball.draw();
-
-                // Update motion trail for the ball
                 updateMotionTrail(ball);
-
-                // Check for collisions
                 checkCollision();
 
                 System.out.println("time " + score.getTime());
 
-                if (score.getTime() == 0) {
+
+                if (score.getTime() == 0)
+                {
                     gameEnded = true;
-                    goalpostbarrier=false;
-                    isSlowed=false;
-                    isOpponentStrikerFrozen=false;
+                    goalpostbarrier = false;
+                    isSlowed = false;
+                    isOpponentStrikerFrozen = false;
                     striker2.getCircle().setDisable(false);
                     player1goalps.setStroke(Color.WHITE);
                     slowball.getCircle().setVisible(false);
@@ -193,32 +221,58 @@ public class Board {
                     gameLoop.stop();
                     score.pauseTimer();
 
-                    if (score.player1 > score.player2) {
+                    if (score.player1 > score.player2)
+                    {
                         winText.setText(String.format("Player 1 wins!!"));
                         winText.setVisible(true); // Hide the win text
-                    } else if (score.player2 > score.player1) {
+                    } else if (score.player2 > score.player1)
+                    {
                         winText.setText(String.format("Player 2 wins!!"));
                         winText.setVisible(true); // Hide the win text
-                    } else {
+                    } else
+                    {
                         winText.setText(String.format("Its a Draw!!"));
                         winText.setVisible(true); // Hide the win text
                     }
+
+
+                    database.saveScore("Player_green", score.player1);
+                    database.saveScore("Player_blue", score.player2);
 
 //                score.setTime(30);
 //                resetPositions();
 //                draw_scoreboard();
                     System.out.println(score.player1);
                     System.out.println(score.player2);
-
                 }
-
-
             }
+        }
+
+        private void endGame()
+        {
+            gameEnded = true;
+            gameLoop.stop();
+            score.pauseTimer();
+
+            if (score.player1 > score.player2) {
+                winText.setText("Player 1 wins!!");
+                winText.setVisible(true);
+            } else if (score.player2 > score.player1) {
+                winText.setText("Player 2 wins!!");
+                winText.setVisible(true);
+            } else {
+                winText.setText("It's a Draw!!");
+                winText.setVisible(true);
+            }
+
+            System.out.println(score.player1);
+            System.out.println(score.player2);
         }
     };
 
     @FXML
-    public void initialize() {
+    public void initialize()
+    {
 
         canvas = new Canvas(GAME_WIDTH, GAME_HEIGHT); // Adjust the size as needed
 
@@ -246,15 +300,15 @@ public class Board {
 
         // Initialize the board
         newStriker(100, 300, Color.RED, 1, striker1); // initial position of the strikers in the board
-        newStriker2(700, 300, Color.GREEN,2, striker2);
-        prevxs1=100;
-        prevys1=300;
-        prevxs2=700;
-        prevys2=300;
+        newStriker(700, 300, Color.GREEN, 2, striker2);
+        prevxs1 = 100;
+        prevys1 = 300;
+        prevxs2 = 700;
+        prevys2 = 300;
 
         newBall();
         newslowBall();// initial position of the ball, it will start from any random position in the middle line of the board
-        ballVelocity=ball.getspeed();
+        ballVelocity = ball.getspeed();
 
         // Start the game loop
         gameLoop.start();
@@ -319,8 +373,10 @@ public class Board {
         c.setFill(ballPattern);
 
         Random random = new Random();
+
         ball = new Ball((GAME_WIDTH / 2) - (BALL_DIAMETER / 2),(GAME_HEIGHT/2) - (BALL_DIAMETER/2)-16, BALL_DIAMETER, c);
       //  ball=new Ball(GAME_WIDTH,GAME_HEIGHT-60,BALL_DIAMETER,c);
+
         pane.getChildren().add(c);
         ball.draw();
 
@@ -336,7 +392,6 @@ public class Board {
         striker2.updatePosition(deltaTime);*/
 
         checkCollision();
-
 
 
     }
@@ -388,22 +443,38 @@ public class Board {
 
         striker.draw(); //draw the striker
 
-//        if(striker.getID() == 2) {
-        if(true) {
+        if (striker.getID() == 2)
+        {
+//        if(true) {
 
-            // Setting mouse control
-           // c.setOnMousePressed(event -> pressed(event, striker));
-            c.setOnMouseDragged(event -> dragged(event, striker));
-            c.setOnMouseReleased(event -> released(event, striker));
+//            // Setting mouse control
+//            c.setOnMousePressed(event -> pressed(event, striker));
+//            c.setOnMouseDragged(event -> dragged(event, striker));
+//            c.setOnMouseReleased(event -> released(event, striker));
+
+//            MouseControl m1 = new MouseControl(c, striker);
+            MouseControl m1 = new MouseControl(striker2, c);
+
+            m1.start();
         }
         else
         {
+            KeyboardControl k1 = new KeyboardControl(striker, pane);
 
-//
+//            // Setting keyboard control
+//            pane.setOnKeyPressed(event -> keyPressed(event, striker));
+//            pane.requestFocus(); // Ensure the pane has focus to receive key events
+
+//            KeyboardControl k1 = new KeyboardControl();
+
+            k1.start();
 
         }
     }
-    public void newStriker2(int x, int y, Color color, int id, Striker striker) {
+  
+  
+    public void newStriker2(int x, int y, Color color, int id, Striker striker) 
+    {
         Circle c = new Circle();
         Color neonColor = color.brighter().brighter().brighter();
         c.setFill(Color.WHITE);
@@ -441,24 +512,30 @@ public class Board {
         }
         else
         {
+            KeyboardControl k1 = new KeyboardControl(striker, pane);
 
-//
+//            // Setting keyboard control
+//            pane.setOnKeyPressed(event -> keyPressed(event, striker));
+//            pane.requestFocus(); // Ensure the pane has focus to receive key events
+
+//            KeyboardControl k1 = new KeyboardControl();
+
+            k1.start();
 
         }
     }
 
-
     //Collision physics
 
-    public void checkCollisionslow() {
+    public void checkCollisionslow() 
+    {
 
-
-        int diameter = strikerSize/2;
-        int ball_radius = BALL_DIAMETER/2;
+        int diameter = strikerSize / 2;
+        int ball_radius = BALL_DIAMETER / 2;
         int rectWidth = 50;
         int rectHeight = 150;
         int rectX = 0; // Positioned on the left wall
-        int rectx2=rectX+GAME_WIDTH;
+        int rectx2 = rectX + GAME_WIDTH;
         int rectY = (GAME_HEIGHT - rectHeight) / 2;
         long currentTime = System.currentTimeMillis();
 
@@ -469,8 +546,8 @@ public class Board {
             striker1.draw();
         }
 
-        if (striker1.getX() >= (GAME_WIDTH/2 - (diameter))) {
-            striker1.setX(GAME_WIDTH/2 - (diameter));
+        if (striker1.getX() >= (GAME_WIDTH / 2 - (diameter))) {
+            striker1.setX(GAME_WIDTH / 2 - (diameter));
             striker1.draw();
         }
 
@@ -486,8 +563,8 @@ public class Board {
 
 
         // Boundary checking for striker2
-        if (striker2.getX() <= GAME_WIDTH/2+diameter) {
-            striker2.setX(GAME_WIDTH/2+diameter);
+        if (striker2.getX() <= GAME_WIDTH / 2 + diameter) {
+            striker2.setX(GAME_WIDTH / 2 + diameter);
             striker2.draw();
         }
 
@@ -505,11 +582,11 @@ public class Board {
             striker2.setY(GAME_HEIGHT - (diameter));
             striker2.draw();
         }
-        if (slowball.getX() - ball_radius <= rectX + rectWidth && slowball.getY() + ball_radius >= rectY && slowball.getY() - ball_radius <= rectY + rectHeight && !goalpostbarrier ) {
+        if (slowball.getX() - ball_radius <= rectX + rectWidth && slowball.getY() + ball_radius >= rectY && slowball.getY() - ball_radius <= rectY + rectHeight && !goalpostbarrier) {
             // Check collision with the top side of the rectangle
             if (slowball.getY() - ball_radius <= rectY) {
                 lastCollisionTime = currentTime;
-                BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(slowball.getX() - blastoffset, slowball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -523,11 +600,11 @@ public class Board {
                 timeline.play();
 
                 slowball.setYDirection(-slowball.getYVelocity());
-                slowball.setY(rectY - ball_radius );
+                slowball.setY(rectY - ball_radius);
             }
             // Check collision with the bottom side of the rectangle
             if (slowball.getY() + ball_radius >= rectY + rectHeight) {
-                BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(slowball.getX() - blastoffset, slowball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -543,13 +620,11 @@ public class Board {
                 slowball.setY(rectY + rectHeight + ball_radius); // Prevent the ball from entering the rectangle
 
             }
-        }
-
-        else if (slowball.getX() - ball_radius >= rectx2 - rectWidth && slowball.getY() + ball_radius >= rectY && slowball.getY() - ball_radius <= rectY + rectHeight && !goalpostbarrierplay2 ) {
+        } else if (slowball.getX() - ball_radius >= rectx2 - rectWidth && slowball.getY() + ball_radius >= rectY && slowball.getY() - ball_radius <= rectY + rectHeight && !goalpostbarrierplay2) {
             // Check collision with the top side of the rectangle
             if (slowball.getY() - ball_radius <= rectY) {
                 lastCollisionTime = currentTime;
-                BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(slowball.getX() - blastoffset, slowball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -563,11 +638,11 @@ public class Board {
                 timeline.play();
 
                 slowball.setYDirection(-slowball.getYVelocity());
-                slowball.setY(rectY - ball_radius );
+                slowball.setY(rectY - ball_radius);
             }
             // Check collision with the bottom side of the rectangle
             if (slowball.getY() + ball_radius >= rectY + rectHeight) {
-                BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(slowball.getX() - blastoffset, slowball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -583,8 +658,7 @@ public class Board {
                 slowball.setY(rectY + rectHeight + ball_radius); // Prevent the ball from entering the rectangle
 
             }
-        }
-        else if (slowball.getX() >= (GAME_WIDTH - 36-30) && slowball.getY() >= (goalpos+ BALL_DIAMETER) && slowball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrierplay2) {
+        } else if (slowball.getX() >= (GAME_WIDTH - 36 - 30) && slowball.getY() >= (goalpos + BALL_DIAMETER) && slowball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrierplay2) {
 
             score.player1++;
             resetPositions();
@@ -603,9 +677,7 @@ public class Board {
             timeline.play();
             System.out.println(score.player2);
 
-        }
-
-        else if (slowball.getX() <= 36+30 &&  slowball.getY() >= (goalpos+ BALL_DIAMETER) && slowball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier && true) {
+        } else if (slowball.getX() <= 36 + 30 && slowball.getY() >= (goalpos + BALL_DIAMETER) && slowball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier && true) {
 
             score.player2++;
             resetPositions();
@@ -625,15 +697,14 @@ public class Board {
             System.out.println(score.player1);
 
 
-
         }
 
 
-        if (slowball.getX() - ball_radius <= rectX + rectWidth && slowball.getY() + ball_radius >= rectY && slowball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrier ) {
+        if (slowball.getX() - ball_radius <= rectX + rectWidth && slowball.getY() + ball_radius >= rectY && slowball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrier) {
             // Check collision with the top side of the rectangle
             if (slowball.getY() - ball_radius <= rectY) {
                 lastCollisionTime = currentTime;
-                BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(slowball.getX() - blastoffset, slowball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -650,7 +721,7 @@ public class Board {
             }
             // Check collision with the bottom side of the rectangle
             if (slowball.getY() + ball_radius >= rectY + rectHeight) {
-                BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(slowball.getX() - blastoffset, slowball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -667,7 +738,7 @@ public class Board {
             }
             // Check collision with the right side of the rectangle
             if (slowball.getX() - ball_radius <= rectX + rectWidth) {
-                BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(slowball.getX() - blastoffset, slowball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 slowball.setX(rectX + rectWidth + ball_radius); // Prevent the ball from entering the rectangle
@@ -676,12 +747,11 @@ public class Board {
         }
 
 
-
-        if (slowball.getX() - ball_radius >= rectx2 + rectWidth && slowball.getY() + ball_radius >= rectY && slowball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrierplay2 ) {
+        if (slowball.getX() - ball_radius >= rectx2 + rectWidth && slowball.getY() + ball_radius >= rectY && slowball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrierplay2) {
             // Check collision with the top side of the rectangle
             if (slowball.getY() - ball_radius <= rectY) {
                 lastCollisionTime = currentTime;
-                BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(slowball.getX() - blastoffset, slowball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -698,7 +768,7 @@ public class Board {
             }
             // Check collision with the bottom side of the rectangle
             if (slowball.getY() + ball_radius >= rectY + rectHeight) {
-                BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(slowball.getX() - blastoffset, slowball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -715,7 +785,7 @@ public class Board {
             }
             // Check collision with the right side of the rectangle
             if (slowball.getX() - ball_radius >= rectx2 - rectWidth) {
-                BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(slowball.getX() - blastoffset, slowball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 slowball.setX(rectx2 - rectWidth - ball_radius); // Prevent the ball from entering the rectangle
@@ -728,8 +798,7 @@ public class Board {
             slowball.setYDirection(-slowball.getYVelocity());
             perturbDirectionslow(slowball);
             //  ball.setXDirection(ball.getXVelocity() + (Math.random() - 0.5) * 0.1);
-            if(slowball.getYVelocity()==0 || slowball.getXVelocity()==0 )
-            {
+            if (slowball.getYVelocity() == 0 || slowball.getXVelocity() == 0) {
                 Random random = new Random();
                 int randomXDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for x velocity
                 int randomYDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for y velocity
@@ -744,8 +813,7 @@ public class Board {
             perturbDirectionslow(slowball);
             //  ball.setYDirection(ball.getYVelocity() + (Math.random() - 0.5) * 0.1);
 
-            if(slowball.getYVelocity()==0 || slowball.getXVelocity()==0 )
-            {
+            if (slowball.getYVelocity() == 0 || slowball.getXVelocity() == 0) {
                 Random random = new Random();
                 int randomXDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for x velocity
                 int randomYDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for y velocity
@@ -756,9 +824,9 @@ public class Board {
         }
 
         // Collisions with the strikers
-        else if (intersectsslow(slowball, striker1) || intersectsslow(slowball, striker2) ) {
+        else if (intersectsslow(slowball, striker1) || intersectsslow(slowball, striker2)) {
 
-            BlastEffect blastEffect1 = new BlastEffect(slowball.getX()-blastoffset, slowball.getY()+blastoffset, Color.rgb(104, 110, 148));
+            BlastEffect blastEffect1 = new BlastEffect(slowball.getX() - blastoffset, slowball.getY() + blastoffset, Color.rgb(104, 110, 148));
 
             pane.getChildren().add(blastEffect1);
             blastEffectActive = true;
@@ -784,7 +852,7 @@ public class Board {
             // Calculate the angle between the striker's movement direction and the collision angle
             double angleDifference = collisionAngle - strikerMovementDirection;
             double randomAngleOffset = (Math.random() - 0.5) * 0.1;
-            angleDifference=(angleDifference+randomAngleOffset);
+            angleDifference = (angleDifference + randomAngleOffset);
 
             // Adjust the direction of the ball based on the angle difference
             double newBallXVelocity = Math.cos(angleDifference) * slowball.getXVelocity() - Math.sin(angleDifference) * slowball.getYVelocity();
@@ -793,61 +861,48 @@ public class Board {
             double newBallX = slowball.getX() + newBallXVelocity;
             double newBallY = slowball.getY() + newBallYVelocity;
             Random random = new Random();
-            int i=random.nextInt(5);
+            int i = random.nextInt(5);
 
 
             //top edge or left edge
-            if(newBallX<=36 || newBallY<=32)
-            {
-                if(newBallX<=36 && newBallY>32)
-                {
+            if (newBallX <= 36 || newBallY <= 32) {
+                if (newBallX <= 36 && newBallY > 32) {
                     newBallX += 50;
-                    if (newBallX<=36)
-                    {
+                    if (newBallX <= 36) {
                         //newBallX -= strikerMovementDirection*5;
                         newBallX -= 2 * 50;
                     }
-                } else if (newBallX>36 && newBallY<=32) {
+                } else if (newBallX > 36 && newBallY <= 32) {
                     /*newBallY += newBallYVelocity;*/
-                    newBallY+=50;
-                    while (newBallY<=32)
-                    {
-                        newBallY -=2*050;
+                    newBallY += 50;
+                    while (newBallY <= 32) {
+                        newBallY -= 2 * 050;
                     }
-                }
-                else {
+                } else {
                     newBallX += 50;
                     if (newBallX <= 36 && newBallY <= 32) {
-                        newBallX -= 2* 50;
+                        newBallX -= 2 * 50;
                     }
                     // newBallY += newBallYVelocity;
-                    newBallY+=50;
+                    newBallY += 50;
                     while (newBallY <= 32) {
                         newBallY -= 2 * 50;
                     }
                 }
 
 
-
-            }
-            else if(newBallX<=36 || newBallY>=(GAME_HEIGHT-50))
-
-            {
-                if(newBallX<=36 && newBallY<(GAME_HEIGHT-50))
-                {
+            } else if (newBallX <= 36 || newBallY >= (GAME_HEIGHT - 50)) {
+                if (newBallX <= 36 && newBallY < (GAME_HEIGHT - 50)) {
                     newBallX += 50;
-                    if (newBallX<=36)
-                    {
-                        newBallX -=2*50;
+                    if (newBallX <= 36) {
+                        newBallX -= 2 * 50;
                     }
-                } else if (newBallX>36 && newBallY>=(GAME_HEIGHT-50)) {
+                } else if (newBallX > 36 && newBallY >= (GAME_HEIGHT - 50)) {
                     newBallY += 50;
-                    if (newBallY>=(GAME_HEIGHT-50))
-                    {
-                        newBallY -=2*50;
+                    if (newBallY >= (GAME_HEIGHT - 50)) {
+                        newBallY -= 2 * 50;
                     }
-                }
-                else {
+                } else {
                     newBallX += 50;
                     if (newBallX <= 36 && newBallY >= (GAME_HEIGHT - 50)) {
                         newBallX -= 50 * 2;
@@ -859,25 +914,18 @@ public class Board {
                 }
 
 
-
-            }
-            else if(newBallX>=(GAME_WIDTH-36) || newBallY<=32)
-            {
-                if(newBallX>=(GAME_WIDTH-36) && newBallY>32)
-                {
+            } else if (newBallX >= (GAME_WIDTH - 36) || newBallY <= 32) {
+                if (newBallX >= (GAME_WIDTH - 36) && newBallY > 32) {
                     newBallX += 50;
-                    if(newBallX>=(GAME_WIDTH-36))
-                    {
-                        newBallX -=2*50;
+                    if (newBallX >= (GAME_WIDTH - 36)) {
+                        newBallX -= 2 * 50;
                     }
-                } else if (newBallX<(GAME_WIDTH-36) && newBallY<=32) {
+                } else if (newBallX < (GAME_WIDTH - 36) && newBallY <= 32) {
                     newBallY += 50;
-                    if (newBallY<=32)
-                    {
-                        newBallY -= 2*50;
+                    if (newBallY <= 32) {
+                        newBallY -= 2 * 50;
                     }
-                }
-                else {
+                } else {
                     newBallX += 50;
                     if (newBallX >= (GAME_WIDTH - 36) && newBallY <= 32) {
                         newBallX -= 2 * 50;
@@ -889,27 +937,19 @@ public class Board {
                 }
 
 
-
-            }
-
-            else if(newBallX>=(GAME_WIDTH-36) || newBallY>=(GAME_HEIGHT-50))
-            {
-                if(newBallX>=(GAME_WIDTH-36) && newBallY<(GAME_HEIGHT-50))
-                {
+            } else if (newBallX >= (GAME_WIDTH - 36) || newBallY >= (GAME_HEIGHT - 50)) {
+                if (newBallX >= (GAME_WIDTH - 36) && newBallY < (GAME_HEIGHT - 50)) {
                     newBallX += 50;
-                    if(newBallX<=(GAME_WIDTH-36))
-                    {
-                        newBallX -= 2*50;
+                    if (newBallX <= (GAME_WIDTH - 36)) {
+                        newBallX -= 2 * 50;
                     }
-                } else if (newBallX<(GAME_WIDTH-36) && newBallY>=(GAME_HEIGHT-50)) {
+                } else if (newBallX < (GAME_WIDTH - 36) && newBallY >= (GAME_HEIGHT - 50)) {
                     newBallY += 50;
-                    if(newBallY>=(GAME_HEIGHT-50))
-                    {
-                        newBallY -= 2*50;
+                    if (newBallY >= (GAME_HEIGHT - 50)) {
+                        newBallY -= 2 * 50;
                     }
 
-                }
-                else {
+                } else {
                     newBallX += 50;
                     if (newBallX <= (GAME_WIDTH - 36) && newBallY >= (GAME_HEIGHT - 50)) {
                         newBallX -= 2 * 50;
@@ -919,7 +959,6 @@ public class Board {
                         newBallY -= 2 * 50;
                     }
                 }
-
 
 
             }
@@ -945,12 +984,12 @@ public class Board {
     public void checkCollision() {
 
 
-        int diameter = strikerSize/2;
-        int ball_radius = BALL_DIAMETER/2;
+        int diameter = strikerSize / 2;
+        int ball_radius = BALL_DIAMETER / 2;
         int rectWidth = 50;
         int rectHeight = 150;
         int rectX = 0; // Positioned on the left wall
-        int rectx2=rectX+GAME_WIDTH;
+        int rectx2 = rectX + GAME_WIDTH;
         int rectY = (GAME_HEIGHT - rectHeight) / 2;
         long currentTime = System.currentTimeMillis();
 
@@ -961,8 +1000,8 @@ public class Board {
             striker1.draw();
         }
 
-        if (striker1.getX() >= (GAME_WIDTH/2 - (diameter))) {
-            striker1.setX(GAME_WIDTH/2 - (diameter));
+        if (striker1.getX() >= (GAME_WIDTH / 2 - (diameter))) {
+            striker1.setX(GAME_WIDTH / 2 - (diameter));
             striker1.draw();
         }
 
@@ -978,8 +1017,8 @@ public class Board {
 
 
         // Boundary checking for striker2
-        if (striker2.getX() <= GAME_WIDTH/2+diameter) {
-            striker2.setX(GAME_WIDTH/2+diameter);
+        if (striker2.getX() <= GAME_WIDTH / 2 + diameter) {
+            striker2.setX(GAME_WIDTH / 2 + diameter);
             striker2.draw();
         }
 
@@ -997,11 +1036,11 @@ public class Board {
             striker2.setY(GAME_HEIGHT - (diameter));
             striker2.draw();
         }
-        if (ball.getX() - ball_radius <= rectX + rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && !goalpostbarrier ) {
+        if (ball.getX() - ball_radius <= rectX + rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && !goalpostbarrier) {
             // Check collision with the top side of the rectangle
             if (ball.getY() - ball_radius <= rectY) {
                 lastCollisionTime = currentTime;
-                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX() - blastoffset, ball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -1015,11 +1054,11 @@ public class Board {
                 timeline.play();
 
                 ball.setYDirection(-ball.getYVelocity());
-                ball.setY(rectY - ball_radius );
+                ball.setY(rectY - ball_radius);
             }
             // Check collision with the bottom side of the rectangle
             if (ball.getY() + ball_radius >= rectY + rectHeight) {
-                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX() - blastoffset, ball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -1035,13 +1074,11 @@ public class Board {
                 ball.setY(rectY + rectHeight + ball_radius); // Prevent the ball from entering the rectangle
 
             }
-        }
-
-        else if (ball.getX() - ball_radius >= rectx2 - rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && !goalpostbarrierplay2 ) {
+        } else if (ball.getX() - ball_radius >= rectx2 - rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && !goalpostbarrierplay2) {
             // Check collision with the top side of the rectangle
             if (ball.getY() - ball_radius <= rectY) {
                 lastCollisionTime = currentTime;
-                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX() - blastoffset, ball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -1055,11 +1092,11 @@ public class Board {
                 timeline.play();
 
                 ball.setYDirection(-ball.getYVelocity());
-                ball.setY(rectY - ball_radius );
+                ball.setY(rectY - ball_radius);
             }
             // Check collision with the bottom side of the rectangle
             if (ball.getY() + ball_radius >= rectY + rectHeight) {
-                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX() - blastoffset, ball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -1075,8 +1112,7 @@ public class Board {
                 ball.setY(rectY + rectHeight + ball_radius); // Prevent the ball from entering the rectangle
 
             }
-        }
-        else if (ball.getX() >= (GAME_WIDTH - 36-30) && ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrierplay2) {
+        } else if (ball.getX() >= (GAME_WIDTH - 36 - 30) && ball.getY() >= (goalpos + BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrierplay2) {
 
             score.player1++;
             resetPositions();
@@ -1095,9 +1131,7 @@ public class Board {
             timeline.play();
             System.out.println(score.player2);
 
-        }
-
-        else if (ball.getX() <= 36+30 && /*ball.getY() >= (220+ BALL_DIAMETER) && ball.getY() <= (360) &&*/ ball.getY() >= (goalpos+ BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier && true) {
+        } else if (ball.getX() <= 36 + 30 && /*ball.getY() >= (220+ BALL_DIAMETER) && ball.getY() <= (360) &&*/ ball.getY() >= (goalpos + BALL_DIAMETER) && ball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier && true) {
 
 
             score.player2++;
@@ -1120,15 +1154,14 @@ public class Board {
             System.out.println(score.player1);
 
 
-
         }
 
 
-        if (ball.getX() - ball_radius <= rectX + rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrier ) {
+        if (ball.getX() - ball_radius <= rectX + rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrier) {
             // Check collision with the top side of the rectangle
             if (ball.getY() - ball_radius <= rectY) {
                 lastCollisionTime = currentTime;
-                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX() - blastoffset, ball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -1145,7 +1178,7 @@ public class Board {
             }
             // Check collision with the bottom side of the rectangle
             if (ball.getY() + ball_radius >= rectY + rectHeight) {
-                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX() - blastoffset, ball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -1162,7 +1195,7 @@ public class Board {
             }
             // Check collision with the right side of the rectangle
             if (ball.getX() - ball_radius <= rectX + rectWidth) {
-                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX() - blastoffset, ball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 ball.setX(rectX + rectWidth + ball_radius); // Prevent the ball from entering the rectangle
@@ -1171,12 +1204,11 @@ public class Board {
         }
 
 
-
-        if (ball.getX() - ball_radius >= rectx2 + rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrierplay2 ) {
+        if (ball.getX() - ball_radius >= rectx2 + rectWidth && ball.getY() + ball_radius >= rectY && ball.getY() - ball_radius <= rectY + rectHeight && goalpostbarrierplay2) {
             // Check collision with the top side of the rectangle
             if (ball.getY() - ball_radius <= rectY) {
                 lastCollisionTime = currentTime;
-                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX() - blastoffset, ball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -1193,7 +1225,7 @@ public class Board {
             }
             // Check collision with the bottom side of the rectangle
             if (ball.getY() + ball_radius >= rectY + rectHeight) {
-                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX() - blastoffset, ball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 blastEffectActive = true;
@@ -1210,7 +1242,7 @@ public class Board {
             }
             // Check collision with the right side of the rectangle
             if (ball.getX() - ball_radius >= rectx2 - rectWidth) {
-                BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+                BlastEffect blastEffect1 = new BlastEffect(ball.getX() - blastoffset, ball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
                 pane.getChildren().add(blastEffect1);
                 ball.setX(rectx2 - rectWidth - ball_radius); // Prevent the ball from entering the rectangle
@@ -1221,24 +1253,22 @@ public class Board {
         if (ball.getY() <= 32 || ball.getY() >= (GAME_HEIGHT - 50)) {
             ball.setYDirection(-ball.getYVelocity());
             perturbDirection(ball);
-          //  ball.setXDirection(ball.getXVelocity() + (Math.random() - 0.5) * 0.1);
-            if(ball.getYVelocity()==0 || ball.getXVelocity()==0 )
-            {
-                 Random random = new Random();
+            //  ball.setXDirection(ball.getXVelocity() + (Math.random() - 0.5) * 0.1);
+            if (ball.getYVelocity() == 0 || ball.getXVelocity() == 0) {
+                Random random = new Random();
                 int randomXDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for x velocity
                 int randomYDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for y velocity
                 ball.setXDirection(randomXDirection * ball.getspeed());
                 ball.setYDirection(randomYDirection * ball.getspeed());
-          }
+            }
 
         }
         if (ball.getX() <= 36 || ball.getX() >= (GAME_WIDTH - 36)) {
             ball.setXDirection(-ball.getXVelocity());
             perturbDirection(ball);
-          //  ball.setYDirection(ball.getYVelocity() + (Math.random() - 0.5) * 0.1);
+            //  ball.setYDirection(ball.getYVelocity() + (Math.random() - 0.5) * 0.1);
 
-            if(ball.getYVelocity()==0 || ball.getXVelocity()==0 )
-            {
+            if (ball.getYVelocity() == 0 || ball.getXVelocity() == 0) {
                 Random random = new Random();
                 int randomXDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for x velocity
                 int randomYDirection = random.nextInt(2) == 0 ? -1 : 1; // Random direction for y velocity
@@ -1248,14 +1278,11 @@ public class Board {
         }
 
 
-
         // Collisions with the strikers
-        else if (intersects(ball, striker1) || intersectss2(ball, striker2) ) {
+        else if (intersects(ball, striker1) || intersectss2(ball, striker2)) {
 
 
-
-
-            BlastEffect blastEffect1 = new BlastEffect(ball.getX()-blastoffset, ball.getY()+blastoffset, Color.rgb(104, 110, 148));
+            BlastEffect blastEffect1 = new BlastEffect(ball.getX() - blastoffset, ball.getY() + blastoffset, Color.rgb(104, 110, 148));
 //
 
 
@@ -1283,7 +1310,7 @@ public class Board {
             // Calculate the angle between the striker's movement direction and the collision angle
             double angleDifference = collisionAngle - strikerMovementDirection;
             double randomAngleOffset = (Math.random() - 0.5) * 0.1;
-            angleDifference=(angleDifference+randomAngleOffset);
+            angleDifference = (angleDifference + randomAngleOffset);
 
             // Adjust the direction of the ball based on the angle difference
             double newBallXVelocity = Math.cos(angleDifference) * ball.getXVelocity() - Math.sin(angleDifference) * ball.getYVelocity();
@@ -1292,61 +1319,48 @@ public class Board {
             double newBallX = ball.getX() + newBallXVelocity;
             double newBallY = ball.getY() + newBallYVelocity;
             Random random = new Random();
-            int i=random.nextInt(5);
+            int i = random.nextInt(5);
 
 
             //top edge or left edge
-            if(newBallX<=36 || newBallY<=32)
-            {
-                if(newBallX<=36 && newBallY>32)
-                {
+            if (newBallX <= 36 || newBallY <= 32) {
+                if (newBallX <= 36 && newBallY > 32) {
                     newBallX += 50;
-                    if (newBallX<=36)
-                    {
+                    if (newBallX <= 36) {
                         //newBallX -= strikerMovementDirection*5;
                         newBallX -= 2 * 50;
                     }
-                } else if (newBallX>36 && newBallY<=32) {
+                } else if (newBallX > 36 && newBallY <= 32) {
                     /*newBallY += newBallYVelocity;*/
-                    newBallY+=50;
-                    while (newBallY<=32)
-                    {
-                        newBallY -=2*050;
+                    newBallY += 50;
+                    while (newBallY <= 32) {
+                        newBallY -= 2 * 050;
                     }
-                }
-                else {
+                } else {
                     newBallX += 50;
                     if (newBallX <= 36 && newBallY <= 32) {
-                        newBallX -= 2* 50;
+                        newBallX -= 2 * 50;
                     }
-                   // newBallY += newBallYVelocity;
-                    newBallY+=50;
+                    // newBallY += newBallYVelocity;
+                    newBallY += 50;
                     while (newBallY <= 32) {
                         newBallY -= 2 * 50;
                     }
                 }
 
 
-
-            }
-            else if(newBallX<=36 || newBallY>=(GAME_HEIGHT-50))
-
-            {
-                if(newBallX<=36 && newBallY<(GAME_HEIGHT-50))
-                {
+            } else if (newBallX <= 36 || newBallY >= (GAME_HEIGHT - 50)) {
+                if (newBallX <= 36 && newBallY < (GAME_HEIGHT - 50)) {
                     newBallX += 50;
-                    if (newBallX<=36)
-                    {
-                        newBallX -=2*50;
+                    if (newBallX <= 36) {
+                        newBallX -= 2 * 50;
                     }
-                } else if (newBallX>36 && newBallY>=(GAME_HEIGHT-50)) {
+                } else if (newBallX > 36 && newBallY >= (GAME_HEIGHT - 50)) {
                     newBallY += 50;
-                    if (newBallY>=(GAME_HEIGHT-50))
-                    {
-                        newBallY -=2*50;
+                    if (newBallY >= (GAME_HEIGHT - 50)) {
+                        newBallY -= 2 * 50;
                     }
-                }
-                else {
+                } else {
                     newBallX += 50;
                     if (newBallX <= 36 && newBallY >= (GAME_HEIGHT - 50)) {
                         newBallX -= 50 * 2;
@@ -1358,25 +1372,18 @@ public class Board {
                 }
 
 
-
-            }
-            else if(newBallX>=(GAME_WIDTH-36) || newBallY<=32)
-            {
-                if(newBallX>=(GAME_WIDTH-36) && newBallY>32)
-                {
+            } else if (newBallX >= (GAME_WIDTH - 36) || newBallY <= 32) {
+                if (newBallX >= (GAME_WIDTH - 36) && newBallY > 32) {
                     newBallX += 50;
-                    if(newBallX>=(GAME_WIDTH-36))
-                    {
-                        newBallX -=2*50;
+                    if (newBallX >= (GAME_WIDTH - 36)) {
+                        newBallX -= 2 * 50;
                     }
-                } else if (newBallX<(GAME_WIDTH-36) && newBallY<=32) {
+                } else if (newBallX < (GAME_WIDTH - 36) && newBallY <= 32) {
                     newBallY += 50;
-                    if (newBallY<=32)
-                    {
-                        newBallY -= 2*50;
+                    if (newBallY <= 32) {
+                        newBallY -= 2 * 50;
                     }
-                }
-                else {
+                } else {
                     newBallX += 50;
                     if (newBallX >= (GAME_WIDTH - 36) && newBallY <= 32) {
                         newBallX -= 2 * 50;
@@ -1388,27 +1395,19 @@ public class Board {
                 }
 
 
-
-            }
-
-            else if(newBallX>=(GAME_WIDTH-36) || newBallY>=(GAME_HEIGHT-50))
-            {
-                if(newBallX>=(GAME_WIDTH-36) && newBallY<(GAME_HEIGHT-50))
-                {
+            } else if (newBallX >= (GAME_WIDTH - 36) || newBallY >= (GAME_HEIGHT - 50)) {
+                if (newBallX >= (GAME_WIDTH - 36) && newBallY < (GAME_HEIGHT - 50)) {
                     newBallX += 50;
-                    if(newBallX<=(GAME_WIDTH-36))
-                    {
-                        newBallX -= 2*50;
+                    if (newBallX <= (GAME_WIDTH - 36)) {
+                        newBallX -= 2 * 50;
                     }
-                } else if (newBallX<(GAME_WIDTH-36) && newBallY>=(GAME_HEIGHT-50)) {
+                } else if (newBallX < (GAME_WIDTH - 36) && newBallY >= (GAME_HEIGHT - 50)) {
                     newBallY += 50;
-                    if(newBallY>=(GAME_HEIGHT-50))
-                    {
-                        newBallY -= 2*50;
+                    if (newBallY >= (GAME_HEIGHT - 50)) {
+                        newBallY -= 2 * 50;
                     }
 
-                }
-                else {
+                } else {
                     newBallX += 50;
                     if (newBallX <= (GAME_WIDTH - 36) && newBallY >= (GAME_HEIGHT - 50)) {
                         newBallX -= 2 * 50;
@@ -1418,7 +1417,6 @@ public class Board {
                         newBallY -= 2 * 50;
                     }
                 }
-
 
 
             }
@@ -1439,10 +1437,7 @@ public class Board {
         }
 
 
-
     }
-
-
 
 
     // game restart after winning 1
@@ -1450,16 +1445,15 @@ public class Board {
     private void restartGame(MouseEvent event) {
         if (gameEnded) {
 //             Reset the game state
-            goalpostbarrier=false;
-            isSlowed=false;
-            isOpponentStrikerFrozen=false;
+            goalpostbarrier = false;
+            isSlowed = false;
+            isOpponentStrikerFrozen = false;
             score.setPlayerScores(0, 0); // Reset scores
             resetPositions(); // Reset positions of the ball and strikers
             draw_scoreboard();
             winText.setVisible(false); // Hide the win text
-            score.setPlayerScores(0,0);
+            score.setPlayerScores(0, 0);
             score.setTime(30);
-
 
 
             // Restart the game loop
@@ -1472,13 +1466,15 @@ public class Board {
     }
 
 
-    private void resetPositions() {
+    private void resetPositions()
+    {
         // Remove previously drawn ball and strikers from the pane
         pane.getChildren().remove(ball.getCircle());
         pane.getChildren().remove(striker1.getCircle());
         pane.getChildren().remove(striker2.getCircle());
 
         // Reset positions for striker1 and striker2
+
         newStriker(100, 300, Color.RED,1, striker1); // initial position of the strikers in the board
         newStriker2(700, 300, Color.GREEN,2, striker2);
 
@@ -1491,13 +1487,13 @@ public class Board {
         Circle ballCircle = ball.getCircle();
         Circle strikerCircle = striker.getCircle();
         boolean result;
-        result= getDistance(striker.getX(),striker.getY(),ball.getX(),ball.getY()) <= Math.pow(ballCircle.getRadius() + strikerCircle.getRadius(),2);
+        result = getDistance(striker.getX(), striker.getY(), ball.getX(), ball.getY()) <= Math.pow(ballCircle.getRadius() + strikerCircle.getRadius(), 2);
         double gridx = striker.getX();
         double gridy = striker.getY();
 
-        double disx=ball.getX()-gridx;
-        double disy=ball.getY()-gridy;
-        double sqaure=disx*disx+disy*disy;
+        double disx = ball.getX() - gridx;
+        double disy = ball.getY() - gridy;
+        double sqaure = disx * disx + disy * disy;
 
         double sumOfRadiiSquared = Math.pow(ball.getCircle().getRadius() + striker.getCircle().getRadius(), 2);
         double relativeCollisionX = ball.getX() - striker1.getX();
@@ -1505,12 +1501,12 @@ public class Board {
         double strikerMovementDirection = Math.atan2(striker1.getSpeedY(), striker1.getSpeedX());
 
         double collisionAngle = Math.atan2(relativeCollisionY, relativeCollisionX);
-        if (sqaure < sumOfRadiiSquared && prevxs1!=gridx && prevys1!=gridy) {
-            double movediff=Math.pow((sumOfRadiiSquared-sqaure),0.5);
-            striker.setX(gridx-movediff*Math.cos(strikerMovementDirection));
-            striker.setY(gridy-movediff*Math.sin(strikerMovementDirection));
-            prevxs1=gridx-movediff*Math.cos(strikerMovementDirection);
-            prevys1=gridy-movediff*Math.sin(strikerMovementDirection);
+        if (sqaure < sumOfRadiiSquared && prevxs1 != gridx && prevys1 != gridy) {
+            double movediff = Math.pow((sumOfRadiiSquared - sqaure), 0.5);
+            striker.setX(gridx - movediff * Math.cos(strikerMovementDirection));
+            striker.setY(gridy - movediff * Math.sin(strikerMovementDirection));
+            prevxs1 = gridx - movediff * Math.cos(strikerMovementDirection);
+            prevys1 = gridy - movediff * Math.sin(strikerMovementDirection);
             striker.draw();
 
         }
@@ -1522,13 +1518,13 @@ public class Board {
         Circle ballCircle = ball.getCircle();
         Circle strikerCircle = striker.getCircle();
         boolean result;
-        result= getDistance(striker.getX(),striker.getY(),ball.getX(),ball.getY()) <= Math.pow(ballCircle.getRadius() + strikerCircle.getRadius(),2);
+        result = getDistance(striker.getX(), striker.getY(), ball.getX(), ball.getY()) <= Math.pow(ballCircle.getRadius() + strikerCircle.getRadius(), 2);
         double gridx = striker.getX();
         double gridy = striker.getY();
 
-        double disx=ball.getX()-gridx;
-        double disy=ball.getY()-gridy;
-        double sqaure=disx*disx+disy*disy;
+        double disx = ball.getX() - gridx;
+        double disy = ball.getY() - gridy;
+        double sqaure = disx * disx + disy * disy;
 
         double sumOfRadiiSquared = Math.pow(ball.getCircle().getRadius() + striker.getCircle().getRadius(), 2);
         double relativeCollisionX = ball.getX() - striker1.getX();
@@ -1536,12 +1532,12 @@ public class Board {
         double strikerMovementDirection = Math.atan2(striker1.getSpeedY(), striker1.getSpeedX());
 
         double collisionAngle = Math.atan2(relativeCollisionY, relativeCollisionX);
-        if (sqaure < sumOfRadiiSquared && prevxs2!=gridx && prevys2!=gridy) {
-            double movediff=Math.pow((sumOfRadiiSquared-sqaure),0.5);
-            striker.setX(gridx-movediff*Math.cos(strikerMovementDirection));
-            striker.setY(gridy-movediff*Math.sin(strikerMovementDirection));
-            prevxs2=gridx-movediff*Math.cos(strikerMovementDirection);
-            prevys2=gridy-movediff*Math.sin(strikerMovementDirection);
+        if (sqaure < sumOfRadiiSquared && prevxs2 != gridx && prevys2 != gridy) {
+            double movediff = Math.pow((sumOfRadiiSquared - sqaure), 0.5);
+            striker.setX(gridx - movediff * Math.cos(strikerMovementDirection));
+            striker.setY(gridy - movediff * Math.sin(strikerMovementDirection));
+            prevxs2 = gridx - movediff * Math.cos(strikerMovementDirection);
+            prevys2 = gridy - movediff * Math.sin(strikerMovementDirection);
             striker.draw();
 
         }
@@ -1554,7 +1550,7 @@ public class Board {
         Circle strikerCircle = striker.getCircle();
 
 
-        return getDistance(striker.getX(),striker.getY(),slowball.getX(),slowball.getY()) <= Math.pow(ballCircle.getRadius() + strikerCircle.getRadius(),2);
+        return getDistance(striker.getX(), striker.getY(), slowball.getX(), slowball.getY()) <= Math.pow(ballCircle.getRadius() + strikerCircle.getRadius(), 2);
 
 //        // checks that if both bounds collide or not
 //        return strikerCircle.getBoundsInParent().intersects(ballCircle.getBoundsInParent()) || ballCircle.getBoundsInParent().intersects(strikerCircle.getBoundsInParent());
@@ -1568,22 +1564,20 @@ public class Board {
 //        System.out.println(getDistance(striker1.getX(),striker1.getY(),striker2.getX(),striker2.getY()));
 //        System.out.println(Math.pow(striker1.getradius() + striker2.getradius(),2));
 
-        return getDistance(striker1.getX(),striker1.getY(),striker2.getX(),striker2.getY()) <= Math.pow(striker1.getradius() + striker2.getradius(),2);
+        return getDistance(striker1.getX(), striker1.getY(), striker2.getX(), striker2.getY()) <= Math.pow(striker1.getradius() + striker2.getradius(), 2);
 
 //        // checks that if both bounds collide or not
 //        return strikerCircle.getBoundsInParent().intersects(ballCircle.getBoundsInParent()) || ballCircle.getBoundsInParent().intersects(strikerCircle.getBoundsInParent());
     }
 
 
-    private double getDistance(double x1,double y1,double x2,double y2)
-    {
-        double xDis = x2-x1;
-        double yDis = y2-y1;
+    private double getDistance(double x1, double y1, double x2, double y2) {
+        double xDis = x2 - x1;
+        double yDis = y2 - y1;
 
         return xDis * xDis + yDis * yDis;
 
     }
-
 
     private void released(MouseEvent event, Striker striker) {
 
@@ -1599,16 +1593,15 @@ public class Board {
     }
 
 
-
     private void dragged(MouseEvent event, Striker striker) {
 
         // determines the tasks when striker is dragged
         double gridx = striker.getX() + event.getX();
         double gridy = striker.getY() + event.getY();
 
-        double disx=ball.getX()-gridx;
-        double disy=ball.getY()-gridy;
-        double sqaure=disx*disx+disy*disy;
+        double disx = ball.getX() - gridx;
+        double disy = ball.getY() - gridy;
+        double sqaure = disx * disx + disy * disy;
 
         double sumOfRadiiSquared = Math.pow(ball.getCircle().getRadius() + striker.getCircle().getRadius(), 2);
         //double sumOfRadiiSquared =
@@ -1621,16 +1614,12 @@ public class Board {
 
             striker.setX(gridx);
             striker.setY(gridy);
-        }
-
-
-        else
-        {
+        } else {
 
             striker.setX(gridx);
             striker.setY(gridy);
-            prevxs1=gridx;
-            prevys1=gridy;
+            prevxs1 = gridx;
+            prevys1 = gridy;
             striker.draw();
         }
     }
@@ -1641,9 +1630,9 @@ public class Board {
         double gridx = striker.getX() + event.getX();
         double gridy = striker.getY() + event.getY();
 
-        double disx=ball.getX()-gridx;
-        double disy=ball.getY()-gridy;
-        double sqaure=disx*disx+disy*disy;
+        double disx = ball.getX() - gridx;
+        double disy = ball.getY() - gridy;
+        double sqaure = disx * disx + disy * disy;
 
         double sumOfRadiiSquared = Math.pow(ball.getCircle().getRadius() + striker.getCircle().getRadius(), 2);
         //double sumOfRadiiSquared =
@@ -1656,29 +1645,22 @@ public class Board {
 
             striker.setX(gridx);
             striker.setY(gridy);
-        }
-
-
-        else
-        {
+        } else {
 
             striker.setX(gridx);
             striker.setY(gridy);
-            prevxs2=gridx;
-            prevys2=gridy;
+            prevxs2 = gridx;
+            prevys2 = gridy;
 
             striker.draw();
         }
     }
 
 
-
-
-
     @FXML
     private void handleSlowOpponentButtonClick(ActionEvent actionEvent) {
         if (slowballbool) {
-            slowballbool=false;
+            slowballbool = false;
             isSlowed = true;
 
             Circle c = new Circle(); // before passing it to the ball constructor first we are creating a circle
@@ -1687,7 +1669,7 @@ public class Board {
 
             Random random = new Random();
             slowball = new slow_ball(ball.getX(), ball.getY(), BALL_DIAMETER, c);
-            ballVelocity=slowball.getInitialSpeed();
+            ballVelocity = slowball.getInitialSpeed();
 
             ball.getCircle().setVisible(false);
 
@@ -1708,11 +1690,6 @@ public class Board {
 
                             ball.getCircle().setVisible(true);
 
-                            /*   Circle c = new Circle(); // before passing it to the ball constructor first we are creating a circle
-                            c.setFill(Color.YELLOW);
-                            c.setStroke(Color.WHITE);*/
-
-
                         }
                     }
             ));
@@ -1725,9 +1702,8 @@ public class Board {
     private void handlefreezeOpponentButtonClick(ActionEvent actionEvent) {
         // Check if the opponent striker is not already frozen
 
-        if(frozen)
-        {
-            frozen=false;
+        if (frozen) {
+            frozen = false;
             if (!isOpponentStrikerFrozen) {
                 // Set the flag to indicate that the opponent striker is frozen
                 isOpponentStrikerFrozen = true;
@@ -1761,12 +1737,12 @@ public class Board {
         }
 
     }
+
     @FXML
     private void handlegoalpostbarrierButtonClick(ActionEvent actionEvent) {
 
-        if(goalpost)
-        {
-            goalpost=false;
+        if (goalpost) {
+            goalpost = false;
             if (!goalpostbarrier) {
 
                 goalpostbarrier = true;
@@ -1789,9 +1765,10 @@ public class Board {
     }
 
     @FXML
-    private void handleSlowOpponentButtonClickplay2(ActionEvent actionEvent) {
+    private void handleSlowOpponentButtonClickplay2(ActionEvent actionEvent)
+    {
         if (slowballboolplay2) {
-            slowballboolplay2=false;
+            slowballboolplay2 = false;
             isSlowed = true;
 
             Circle c = new Circle(); // before passing it to the ball constructor first we are creating a circle
@@ -1800,7 +1777,7 @@ public class Board {
 
             Random random = new Random();
             slowball = new slow_ball(ball.getX(), ball.getY(), BALL_DIAMETER, c);
-            ballVelocity=slowball.getInitialSpeed();
+            ballVelocity = slowball.getInitialSpeed();
 
             ball.getCircle().setVisible(false);
 
@@ -1838,9 +1815,8 @@ public class Board {
     private void handlefreezeOpponentButtonClickplay2(ActionEvent actionEvent) {
         // Check if the opponent striker is not already frozen
 
-        if(frozenplay2)
-        {
-            frozenplay2=false;
+        if (frozenplay2) {
+            frozenplay2 = false;
             if (!isOpponentStrikerFrozen) {
                 // Set the flag to indicate that the opponent striker is frozen
                 isOpponentStrikerFrozen = true;
@@ -1874,12 +1850,12 @@ public class Board {
         }
 
     }
+
     @FXML
     private void handlegoalpostbarrierButtonClickplay2(ActionEvent actionEvent) {
 
-        if(goalpostplay2)
-        {
-            goalpostplay2=false;
+        if (goalpostplay2) {
+            goalpostplay2 = false;
             if (!goalpostbarrierplay2) {
 
                 goalpostbarrierplay2 = true;
@@ -1898,7 +1874,122 @@ public class Board {
                 timeline.play();
             }
         }
+    }
+
+        class MouseControl extends Thread {
+            private Striker striker;
+            private Circle circle;
+
+            public MouseControl(Striker striker, Circle circle) {
+                this.striker = striker;
+                this.circle = circle;
+            }
+
+            @Override
+            public void run() {
+                circle.setOnMousePressed(event -> pressed(event, striker));
+                circle.setOnMouseDragged(event -> dragged(event, striker));
+                circle.setOnMouseReleased(event -> released(event, striker));
+            }
+
+            private void released(MouseEvent event, Striker striker) {
+
+                long endTime = System.nanoTime();
+                double timeElapsed = (endTime - startTime) / 1_000_000_000.0; // Convert nanoseconds to seconds
+                double distanceX = event.getSceneX() - startX;
+                double distanceY = event.getSceneY() - startY;
+                double speedX = distanceX / timeElapsed; // Speed in pixels per second
+                double speedY = distanceY / timeElapsed; // Speed in pixels per second
+
+                System.out.println("Mouse Dragging Speed (X): " + speedX);
+                System.out.println("Mouse Dragging Speed (Y): " + speedY);
+            }
+
+            private void dragged(MouseEvent event, Striker striker) {
+
+                // determines the tasks when striker is dragged
+                double gridx = striker.getX() + event.getX();
+                double gridy = striker.getY() + event.getY();
+
+                System.out.println("x " + gridx);
+                System.out.println("y " + gridy);
+
+                striker.setX(gridx);
+                striker.setY(gridy);
+                striker.draw();
+            }
+
+            private void pressed(MouseEvent event, Striker striker) {
+                startX = event.getSceneX();
+                startY = event.getSceneY();
+                startTime = System.nanoTime();
+            }
+        }
+
+        class KeyboardControl extends Thread {
+            private Striker striker;
+            private Pane pane;
+            private Set<KeyCode> pressedKeys = new HashSet<>();
+            private static final double STRIKER_SPEED = 30.0;
+
+            public KeyboardControl(Striker striker, Pane pane) {
+                this.striker = striker;
+                this.pane = pane;
+            }
+
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    pane.setOnKeyPressed(this::keyPressed);
+                    pane.setOnKeyReleased(this::keyReleased);
+                    pane.requestFocus(); // Ensure the pane has focus to receive key events
+                });
+            }
+
+            private void keyPressed(KeyEvent event) {
+                pressedKeys.add(event.getCode());
+                moveStriker();
+            }
+
+            private void keyReleased(KeyEvent event) {
+                pressedKeys.remove(event.getCode());
+                moveStriker();
+            }
+
+            private void moveStriker() {
+                double deltaX = 0;
+                double deltaY = 0;
+
+                if (pressedKeys.contains(KeyCode.W)) deltaY -= 1;
+                if (pressedKeys.contains(KeyCode.A)) deltaX -= 1;
+                if (pressedKeys.contains(KeyCode.S)) deltaY += 1;
+                if (pressedKeys.contains(KeyCode.D)) deltaX += 1;
+
+                // Normalize diagonal movement
+                if (deltaX != 0 && deltaY != 0) {
+                    double diagonalFactor = Math.sqrt(2) / 2;
+                    deltaX *= diagonalFactor;
+                    deltaY *= diagonalFactor;
+                }
+
+                double newX = striker.getX() + deltaX * STRIKER_SPEED;
+                double newY = striker.getY() + deltaY * STRIKER_SPEED;
+
+                // Boundary checking can be added here if needed
+                // newX = Math.max(Math.min(newX, GAME_WIDTH - strikerSize / 2), strikerSize / 2);
+                // newY = Math.max(Math.min(newY, GAME_HEIGHT - strikerSize / 2), strikerSize / 2);
+
+                striker.setX(newX);
+                striker.setY(newY);
+                striker.draw();
+            }
+
+        }
 
     }
 
-}
+
+
+
+
+

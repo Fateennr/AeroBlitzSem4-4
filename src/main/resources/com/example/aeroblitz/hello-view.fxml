@@ -50,4 +50,5 @@
    <Button layoutX="533.0" layoutY="574.0" mnemonicParsing="false" onAction="#handleSlowOpponentButtonClickplay2" styleClass="circularslow-button" stylesheets="@../../../button.css" />
    <Button layoutX="699.0" layoutY="574.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClickplay2" styleClass="circularfreeze-button" stylesheets="@../../../button.css" />
    <Button layoutX="612.0" layoutY="574.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClickplay2" styleClass="circulargoalpost-button" stylesheets="@../../../button.css" />
+
 </AnchorPane>
