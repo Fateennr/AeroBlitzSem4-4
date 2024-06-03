@@ -14,6 +14,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
@@ -26,6 +28,20 @@ import java.util.*;
 
 public class Board
 {
+
+
+    @FXML
+    private Label slowTimerLabel;
+
+    @FXML
+    private Label goalLabel;
+
+    @FXML
+    private Label goalpostTimerLabel;
+
+    @FXML
+    private Label timerLabel;
+
 
 
     @FXML
@@ -135,6 +151,8 @@ public class Board
         private void updateGame()
         {
             drawTrail();
+            moveAIStriker();
+
 
             if (ballVelocity == slowball.getInitialSpeed()) {
                 slowball.move();
@@ -270,6 +288,12 @@ public class Board
         }
     };
 
+    public Board(Label slowTimerLabel, Label goalLabel, Label goalpostTimerLabel) {
+//        this.slowTimerLabel = slowTimerLabel;
+//        this.goalLabel = goalLabel;
+//        this.goalpostTimerLabel = goalpostTimerLabel;
+    }
+
     @FXML
     public void initialize()
     {
@@ -300,7 +324,7 @@ public class Board
 
         // Initialize the board
         newStriker(100, 300, Color.RED, 1, striker1); // initial position of the strikers in the board
-        newStriker(700, 300, Color.GREEN, 2, striker2);
+        newStriker2(700, 300, Color.GREEN, 2, striker2);
         prevxs1 = 100;
         prevys1 = 300;
         prevxs2 = 700;
@@ -318,6 +342,87 @@ public class Board
     //motion trail is turned off for now
 
     private void drawTrail() {
+
+    }
+
+    private void moveAIStriker()
+    {
+        double predictedY, predictedX;
+
+        // Initial defensive position
+        double initialX = 700;
+        double initialY = 300;
+
+        // Move the AI striker towards the predicted position
+        double xSpeed = 4; // Adjust speed as necessary
+        double ySpeed = 4; // Adjust speed as necessary
+
+        double ballY = ball.getY();
+        double strikerY = striker2.getY();
+
+        // Calculate the distance between the ball and the AI-controlled striker
+        double distance = Math.abs(ballY - strikerY);
+
+        if(distance <= 50)
+        {
+            xSpeed = 6;
+            ySpeed = 5;
+        }
+        else
+        {
+            xSpeed = 4;
+            ySpeed = 4;
+        }
+
+        // Calculate the distance and direction of the ball from the striker
+        double ballDistanceX = ball.getX() - striker2.getX();
+        double ballDistanceY = ball.getY() - striker2.getY();
+
+        // Defensive logic
+        if (ball.getXVelocity() > 0)
+        {
+            // Ball is moving towards the AI's goal
+            // Predict the ball's future position
+            predictedY = ball.getY() + (ball.getYVelocity() / ball.getXVelocity()) * ballDistanceX;
+            predictedX = striker2.getX(); // Keep x position for blocking
+
+        }
+        else
+        {
+            // Offensive logic
+            // Move towards a better attacking position
+            predictedY = ball.getY() + 50; // Add some randomness for Y
+            predictedX = ball.getX() + 50; // Position the striker ahead of the ball
+        }
+
+        // Ensure the target position is within bounds
+        predictedY = Math.max(0, Math.min(predictedY, GAME_HEIGHT - strikerSize));
+        predictedX = Math.max(0, Math.min(predictedX, GAME_WIDTH - strikerSize));
+
+        // Move the striker based on predictions
+        if (predictedY < striker2.getY())
+        {
+            striker2.setY(striker2.getY() - ySpeed);
+
+        }
+        else if (predictedY > striker2.getY())
+        {
+            striker2.setY(striker2.getY() + ySpeed);
+        }
+
+        striker2.draw();
+
+        if (predictedX < striker2.getX())
+        {
+            striker2.setX(striker2.getX() - xSpeed);
+
+        }
+        else if (predictedX > striker2.getX())
+        {
+            striker2.setX(striker2.getX() + xSpeed);
+        }
+
+        striker2.draw();
 
     }
 
@@ -661,6 +766,13 @@ public class Board
         } else if (slowball.getX() >= (GAME_WIDTH - 36 - 30) && slowball.getY() >= (goalpos + BALL_DIAMETER) && slowball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrierplay2) {
 
             score.player1++;
+
+            ball.getCircle().setVisible(false);
+
+            // Show the goal label
+            goalLabel.setText("GOAL");
+            goalLabel.setVisible(true);
+
             resetPositions();
             draw_scoreboard();
             gameLoop.stop();
@@ -669,6 +781,9 @@ public class Board
                     new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
+
+                            goalLabel.setVisible(false);
+                            ball.getCircle().setVisible(true);
                             gameLoop.start();
                         }
                     }
@@ -680,6 +795,15 @@ public class Board
         } else if (slowball.getX() <= 36 + 30 && slowball.getY() >= (goalpos + BALL_DIAMETER) && slowball.getY() <= (goalpos + 140 - BALL_DIAMETER) && !goalpostbarrier && true) {
 
             score.player2++;
+
+            ball.getCircle().setVisible(false);
+
+
+            // Show the goal label
+            goalLabel.setText("GOAL");
+            goalLabel.setVisible(true);
+
+
             resetPositions();
             draw_scoreboard();
             gameLoop.stop();
@@ -688,6 +812,9 @@ public class Board
                     new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
+
+                            goalLabel.setVisible(false);
+                            ball.getCircle().setVisible(true);
                             gameLoop.start();
                         }
                     }
@@ -1661,9 +1788,18 @@ public class Board
     private void handleSlowOpponentButtonClick(ActionEvent actionEvent) {
         if (slowballbool) {
             slowballbool = false;
+            Media sound;
+            sound = new Media(getClass().getResource("/slowBall.mp3").toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+            mediaPlayer.setOnEndOfMedia(() -> {
+                // When media ends, restart it
+                mediaPlayer.seek(Duration.ZERO);
+                mediaPlayer.play();
+            });
+            mediaPlayer.play();
             isSlowed = true;
 
-            Circle c = new Circle(); // before passing it to the ball constructor first we are creating a circle
+            Circle c = new Circle();
             c.setFill(Color.YELLOW);
             c.setStroke(Color.WHITE);
 
@@ -1675,100 +1811,160 @@ public class Board
 
             pane.getChildren().add(c);
 
+            slowTimerLabel.setText("5");
+            slowTimerLabel.setVisible(true);
+
             Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.seconds(5),
+                    Duration.seconds(1),
                     new EventHandler<ActionEvent>() {
+                        private int timeLeft = 5;
+
                         @Override
                         public void handle(ActionEvent event) {
-                            ballVelocity = ball.getspeed(); // Reset the ball's velocity to its initial value
+                            timeLeft--;
+                            slowTimerLabel.setText(String.valueOf(timeLeft));
 
-                            isSlowed = false;
-                            slowball.getCircle().setVisible(false);
-
-                            ball.setX(slowball.getX());
-                            ball.setY(slowball.getY());
-
-                            ball.getCircle().setVisible(true);
-
+                            if (timeLeft == 0) {
+                                ballVelocity = ball.getspeed(); // Reset the ball's velocity to its initial value
+                                isSlowed = false;
+                                slowball.getCircle().setVisible(false);
+                                ball.setX(slowball.getX());
+                                ball.setY(slowball.getY());
+                                ball.getCircle().setVisible(true);
+                                if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                                    mediaPlayer.stop();
+                                }
+                                slowTimerLabel.setVisible(false);
+                                ((Timeline) event.getSource()).stop();
+                            }
                         }
                     }
             ));
-            timeline.setCycleCount(1);
+            timeline.setCycleCount(5);
             timeline.play();
         }
     }
 
     @FXML
     private void handlefreezeOpponentButtonClick(ActionEvent actionEvent) {
-        // Check if the opponent striker is not already frozen
-
         if (frozen) {
             frozen = false;
             if (!isOpponentStrikerFrozen) {
                 // Set the flag to indicate that the opponent striker is frozen
                 isOpponentStrikerFrozen = true;
-
+                Media sound = new Media(getClass().getResource("/icespell.mp3").toExternalForm());
+                MediaPlayer mediaPlayer = new MediaPlayer(sound);
+                mediaPlayer.setOnEndOfMedia(() -> {
+                    // When media ends, restart it
+                    mediaPlayer.seek(Duration.ZERO);
+                    mediaPlayer.play();
+                });
+                mediaPlayer.play();
                 // Disable mouse events for the opponent striker
                 striker2.getCircle().setDisable(true);
-                Image ballImage = new Image(getClass().getResourceAsStream("/cropped-frozen_s.png"));
-                ImagePattern ballPattern = new ImagePattern(ballImage);
-                striker2.getCircle().setFill(ballPattern);
+
+                // Initialize the timer label
+                timerLabel.setText("5");
+                timerLabel.setVisible(true);
 
                 // Start a timeline to unfreeze the opponent striker after 5 seconds
-                Timeline timeline = new Timeline(new KeyFrame(
-                        Duration.seconds(5),
-                        new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                // Reset the flag to indicate that the opponent striker is no longer frozen
-                                isOpponentStrikerFrozen = false;
+                Timeline timeline = new Timeline(
+                        new KeyFrame(
+                                Duration.seconds(1),
+                                new EventHandler<ActionEvent>() {
+                                    private int timeLeft = 5;
 
-                                // Enable mouse events for the opponent striker
-                                striker2.getCircle().setDisable(false);
-                                Image ballImage = new Image(getClass().getResourceAsStream("/str.jpg"));
-                                ImagePattern ballPattern = new ImagePattern(ballImage);
-                                striker2.getCircle().setFill(ballPattern);
-                            }
-                        }
-                ));
-                timeline.setCycleCount(1);
+                                    @Override
+                                    public void handle(ActionEvent event) {
+                                        timeLeft--;
+                                        if (timeLeft > 0) {
+                                            timerLabel.setText(String.valueOf(timeLeft));
+                                        } else {
+                                            // Reset the flag to indicate that the opponent striker is no longer frozen
+                                            isOpponentStrikerFrozen = false;
+
+                                            // Enable mouse events for the opponent striker
+                                            striker2.getCircle().setDisable(false);
+                                            if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                                                mediaPlayer.stop();
+                                            }
+                                            timerLabel.setVisible(false);
+                                            ((Timeline) event.getSource()).stop();
+                                        }
+                                    }
+                                }
+                        )
+                );
+                timeline.setCycleCount(5);
                 timeline.play();
             }
         }
-
     }
+
 
     @FXML
     private void handlegoalpostbarrierButtonClick(ActionEvent actionEvent) {
-
         if (goalpost) {
             goalpost = false;
-            if (!goalpostbarrier) {
+            Media sound = new Media(getClass().getResource("/bodyfall.mp3").toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+            mediaPlayer.setOnEndOfMedia(() -> {
+                // When media ends, restart it
+                mediaPlayer.seek(Duration.ZERO);
+                mediaPlayer.play();
+            });
+            mediaPlayer.play();
 
+            if (!goalpostbarrier) {
                 goalpostbarrier = true;
                 player1goalps.setStroke(Color.RED);
-                Timeline timeline = new Timeline(new KeyFrame(
-                        Duration.seconds(5),
-                        new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                goalpostbarrier = false;
-                                player1goalps.setStroke(Color.WHITE);
-                            }
-                        }
-                ));
-                timeline.setCycleCount(1);
+
+                // Initialize the goalpost timer label
+                goalpostTimerLabel.setText("5");
+                goalpostTimerLabel.setVisible(true);
+
+                Timeline timeline = new Timeline(
+                        new KeyFrame(
+                                Duration.seconds(1),
+                                new EventHandler<ActionEvent>() {
+                                    private int timeLeft = 5;
+
+                                    @Override
+                                    public void handle(ActionEvent event) {
+                                        timeLeft--;
+                                        if (timeLeft > 0) {
+                                            goalpostTimerLabel.setText(String.valueOf(timeLeft));
+                                        } else {
+                                            goalpostbarrier = false;
+                                            if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                                                mediaPlayer.stop();
+                                            }
+                                            player1goalps.setStroke(Color.WHITE);
+                                            goalpostTimerLabel.setVisible(false);
+                                            ((Timeline) event.getSource()).stop();
+                                        }
+                                    }
+                                }
+                        )
+                );
+                timeline.setCycleCount(5);
                 timeline.play();
             }
         }
-
     }
 
     @FXML
-    private void handleSlowOpponentButtonClickplay2(ActionEvent actionEvent)
-    {
+    private void handleSlowOpponentButtonClickplay2(ActionEvent actionEvent) {
         if (slowballboolplay2) {
             slowballboolplay2 = false;
+            Media sound = new Media(getClass().getResource("/slowBall.mp3").toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(sound);
+            mediaPlayer.setOnEndOfMedia(() -> {
+                // When media ends, restart it
+                mediaPlayer.seek(Duration.ZERO);
+                mediaPlayer.play();
+            });
+            mediaPlayer.play();
             isSlowed = true;
 
             Circle c = new Circle(); // before passing it to the ball constructor first we are creating a circle
@@ -1783,30 +1979,41 @@ public class Board
 
             pane.getChildren().add(c);
 
-            Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.seconds(5),
-                    new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            ballVelocity = ball.getspeed(); // Reset the ball's velocity to its initial value
+            // Initialize the slow timer label
+            slowTimerLabel.setText("5");
+            slowTimerLabel.setVisible(true);
 
-                            isSlowed = false;
-                            slowball.getCircle().setVisible(false);
+            Timeline timeline = new Timeline(
+                    new KeyFrame(
+                            Duration.seconds(1),
+                            new EventHandler<ActionEvent>() {
+                                private int timeLeft = 5;
 
-                            ball.setX(slowball.getX());
-                            ball.setY(slowball.getY());
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    timeLeft--;
+                                    if (timeLeft > 0) {
+                                        slowTimerLabel.setText(String.valueOf(timeLeft));
+                                    } else {
+                                        ballVelocity = ball.getspeed(); // Reset the ball's velocity to its initial value
+                                        isSlowed = false;
+                                        slowball.getCircle().setVisible(false);
 
-                            ball.getCircle().setVisible(true);
+                                        ball.setX(slowball.getX());
+                                        ball.setY(slowball.getY());
 
-                            /*   Circle c = new Circle(); // before passing it to the ball constructor first we are creating a circle
-                            c.setFill(Color.YELLOW);
-                            c.setStroke(Color.WHITE);*/
-
-
-                        }
-                    }
-            ));
-            timeline.setCycleCount(1);
+                                        ball.getCircle().setVisible(true);
+                                        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                                            mediaPlayer.stop();
+                                        }
+                                        slowTimerLabel.setVisible(false);
+                                        ((Timeline) event.getSource()).stop();
+                                    }
+                                }
+                            }
+                    )
+            );
+            timeline.setCycleCount(5);
             timeline.play();
         }
     }
@@ -1814,63 +2021,105 @@ public class Board
     @FXML
     private void handlefreezeOpponentButtonClickplay2(ActionEvent actionEvent) {
         // Check if the opponent striker is not already frozen
-
         if (frozenplay2) {
             frozenplay2 = false;
             if (!isOpponentStrikerFrozen) {
                 // Set the flag to indicate that the opponent striker is frozen
                 isOpponentStrikerFrozen = true;
-
+                Media sound = new Media(getClass().getResource("/icespell.mp3").toExternalForm());
+                MediaPlayer mediaPlayer = new MediaPlayer(sound);
+                mediaPlayer.setOnEndOfMedia(() -> {
+                    // When media ends, restart it
+                    mediaPlayer.seek(Duration.ZERO);
+                    mediaPlayer.play();
+                });
+                mediaPlayer.play();
                 // Disable mouse events for the opponent striker
                 striker1.getCircle().setDisable(true);
-                Image ballImage = new Image(getClass().getResourceAsStream("/cropped-frozen.png"));
-                ImagePattern ballPattern = new ImagePattern(ballImage);
-                striker1.getCircle().setFill(ballPattern);
+
+                // Initialize the timer label
+                timerLabel.setText("5");
+                timerLabel.setVisible(true);
 
                 // Start a timeline to unfreeze the opponent striker after 5 seconds
-                Timeline timeline = new Timeline(new KeyFrame(
-                        Duration.seconds(5),
-                        new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                // Reset the flag to indicate that the opponent striker is no longer frozen
-                                isOpponentStrikerFrozen = false;
+                Timeline timeline = new Timeline(
+                        new KeyFrame(
+                                Duration.seconds(1),
+                                new EventHandler<ActionEvent>() {
+                                    private int timeLeft = 5;
 
-                                // Enable mouse events for the opponent striker
-                                striker1.getCircle().setDisable(false);
-                                Image ballImage = new Image(getClass().getResourceAsStream("/cropped-str1.jpg"));
-                                ImagePattern ballPattern = new ImagePattern(ballImage);
-                                striker1.getCircle().setFill(ballPattern);
-                            }
-                        }
-                ));
-                timeline.setCycleCount(1);
+                                    @Override
+                                    public void handle(ActionEvent event) {
+                                        timeLeft--;
+                                        if (timeLeft > 0) {
+                                            timerLabel.setText(String.valueOf(timeLeft));
+                                        } else {
+                                            // Reset the flag to indicate that the opponent striker is no longer frozen
+                                            isOpponentStrikerFrozen = false;
+                                            // Enable mouse events for the opponent striker
+                                            striker1.getCircle().setDisable(false);
+                                            if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                                                mediaPlayer.stop();
+                                            }
+                                            timerLabel.setVisible(false);
+                                            ((Timeline) event.getSource()).stop();
+                                        }
+                                    }
+                                }
+                        )
+                );
+                timeline.setCycleCount(5);
                 timeline.play();
             }
         }
-
     }
+
 
     @FXML
     private void handlegoalpostbarrierButtonClickplay2(ActionEvent actionEvent) {
-
         if (goalpostplay2) {
             goalpostplay2 = false;
             if (!goalpostbarrierplay2) {
-
+                Media sound = new Media(getClass().getResource("/bodyfall.mp3").toExternalForm());
+                MediaPlayer mediaPlayer = new MediaPlayer(sound);
+                mediaPlayer.setOnEndOfMedia(() -> {
+                    // When media ends, restart it
+                    mediaPlayer.seek(Duration.ZERO);
+                    mediaPlayer.play();
+                });
+                mediaPlayer.play();
                 goalpostbarrierplay2 = true;
                 player2goalps.setStroke(Color.RED);
-                Timeline timeline = new Timeline(new KeyFrame(
-                        Duration.seconds(5),
-                        new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent event) {
-                                goalpostbarrierplay2 = false;
-                                player2goalps.setStroke(Color.WHITE);
-                            }
-                        }
-                ));
-                timeline.setCycleCount(1);
+
+                // Initialize the goalpost timer label
+                goalpostTimerLabel.setText("5");
+                goalpostTimerLabel.setVisible(true);
+
+                Timeline timeline = new Timeline(
+                        new KeyFrame(
+                                Duration.seconds(1),
+                                new EventHandler<ActionEvent>() {
+                                    private int timeLeft = 5;
+
+                                    @Override
+                                    public void handle(ActionEvent event) {
+                                        timeLeft--;
+                                        if (timeLeft > 0) {
+                                            goalpostTimerLabel.setText(String.valueOf(timeLeft));
+                                        } else {
+                                            goalpostbarrierplay2 = false;
+                                            if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                                                mediaPlayer.stop();
+                                            }
+                                            player2goalps.setStroke(Color.WHITE);
+                                            goalpostTimerLabel.setVisible(false);
+                                            ((Timeline) event.getSource()).stop();
+                                        }
+                                    }
+                                }
+                        )
+                );
+                timeline.setCycleCount(5);
                 timeline.play();
             }
         }

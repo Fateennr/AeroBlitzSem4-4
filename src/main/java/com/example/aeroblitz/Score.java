@@ -58,10 +58,10 @@ public class Score {
         gc.setFill(Color.RED);
         gc.setStroke(Color.DIMGREY);
         gc.setFont(Font.font("Consolas", 60));
-        gc.strokeText(String.valueOf(player1 / 10) + String.valueOf(player1 % 10), 50, 50);
+        gc.strokeText(String.valueOf(player1 / 10) + String.valueOf(player1 % 10), 50, 85);
 
         // Draw player 2 score on the right side
-        gc.strokeText((player2 / 10) + String.valueOf(player2 % 10), GAME_WIDTH - 120, 50);
+        gc.strokeText((player2 / 10) + String.valueOf(player2 % 10), GAME_WIDTH - 120, 80);
 
         // Draw the timer
         drawTimer(gc, timer.getTimeSeconds());
@@ -72,15 +72,15 @@ public class Score {
     // Method to draw the timer
     private void drawTimer(GraphicsContext gc, int timeSeconds) {
         // Draw a background for the timer with a darker maroon color
-        gc.setFill(Color.rgb(100, 0, 0)); // Darker maroon color
-        gc.fillRect((GAME_WIDTH / 2) - 50, 10, 100, 80);
+        gc.setFill(Color.rgb(0, 0, 0)); // Darker maroon color
+        gc.fillRect((GAME_WIDTH / 2) - 50, 550, 100, 85);
 
         // Set the color and font for the timer text
-        gc.setFill(Color.rgb(255, 255, 255, 0.7)); // Bright white color with some opacity
+        gc.setFill(Color.rgb(50, 160, 168, 1)); // Bright white color with some opacity
         gc.setFont(Font.font("Consolas", FontWeight.BOLD, 60)); // Make the timer text bold
 
         // Draw the remaining time from the ttimer instance
-        gc.strokeText(String.format("%02d", timeSeconds), (GAME_WIDTH / 2) - 30, 50);
+        gc.strokeText(String.format("%02d", timeSeconds), (GAME_WIDTH / 2) - 30, 600);
     }
 
     // Method to set player scores

@@ -1,0 +1,47 @@
+.circularslow-button {
+    -fx-background-radius: 50%;
+    -fx-min-width: 45px;
+    -fx-min-height: 45px;
+    -fx-max-width: 45px;
+    -fx-max-height: 45px;
+    -fx-background-size: cover;
+    -fx-background-image: url("slowball.jpg"); /* Path to your image */
+    -fx-border-radius: 50%;
+    -fx-padding: 0;
+}
+
+.circularfreeze-button {
+    -fx-background-radius: 50%;
+    -fx-min-width: 45px;
+    -fx-min-height: 45px;
+    -fx-max-width: 45px;
+    -fx-max-height: 45px;
+    -fx-background-size: cover;
+    -fx-background-image: url("\freezee.jpg"); /* Path to your image */
+    -fx-border-radius: 50%;
+    -fx-padding: 0;
+}
+
+.circulargoalpost-button {
+    -fx-background-radius: 50%;
+    -fx-min-width: 45px;
+    -fx-min-height: 45px;
+    -fx-max-width: 45px;
+    -fx-max-height: 45px;
+    -fx-background-size: cover;
+    -fx-background-image: url("\goalpost_2.jpg"); /* Path to your image */
+    -fx-border-radius: 50%;
+    -fx-padding: 0;
+}
+
+.rectangular-button {
+    -fx-background-color: #3498db; /* Fill color */
+    -fx-background-radius: 15; /* Corner radius */
+    -fx-border-radius: 15; /* Border radius */
+    -fx-text-fill: white; /* Text color */
+    -fx-padding: 10px 20px; /* Padding */
+    -fx-font-size: 16px; /* Font size */
+    -fx-border-color: transparent; /* Border color */
+    -fx-border-width: 2px; /* Border width */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 5, 0.5, 0, 0); /* Optional shadow effect */
+}
