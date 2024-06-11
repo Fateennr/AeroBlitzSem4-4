@@ -3,7 +3,9 @@ package com.example.aeroblitz;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.shape.Line;
@@ -40,6 +42,11 @@ public class Ball extends Group {
         dropShadow = new DropShadow();
         dropShadow.setRadius(10);
         dropShadow.setColor(Color.BLACK);
+
+
+
+        // Apply the ImagePattern to the ball
+
         c.setEffect(dropShadow);
 
         // Initialize motion trail

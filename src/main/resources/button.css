@@ -1,0 +1,39 @@
+.circularslow-button {
+    -fx-background-radius: 50%;
+    -fx-min-width: 45px;
+    -fx-min-height: 45px;
+    -fx-max-width: 45px;
+    -fx-max-height: 45px;
+    -fx-background-size: cover;
+    -fx-background-image: url("slowball.jpg"); /* Path to your image */
+    -fx-border-radius: 50%;
+    -fx-padding: 0;
+}
+
+.circularfreeze-button {
+    -fx-background-radius: 50%;
+    -fx-min-width: 45px;
+    -fx-min-height: 45px;
+    -fx-max-width: 45px;
+    -fx-max-height: 45px;
+    -fx-background-size: cover;
+    -fx-background-image: url("\freezee.jpg"); /* Path to your image */
+    -fx-border-radius: 50%;
+    -fx-padding: 0;
+}
+
+.circulargoalpost-button {
+    -fx-background-radius: 50%;
+    -fx-min-width: 45px;
+    -fx-min-height: 45px;
+    -fx-max-width: 45px;
+    -fx-max-height: 45px;
+    -fx-background-size: cover;
+    -fx-background-image: url("\goalpost_2.jpg"); /* Path to your image */
+    -fx-border-radius: 50%;
+    -fx-padding: 0;
+}
+
+.rectangular-button {
+    -fx-background-image: url("\freezee.jpg");
+}
