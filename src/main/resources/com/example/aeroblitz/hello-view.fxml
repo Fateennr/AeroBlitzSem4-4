@@ -17,7 +17,12 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
@@ -26,12 +31,75 @@
 
   <!-- Air Hockey Table -->
   <Rectangle fx:id="boardneww" height="564.0" layoutX="-36.0" layoutY="-40.0" width="771.0" x="50" y="50" />
-   <Rectangle fx:id="player1goalps" arcHeight="5.0" arcWidth="5.0" height="150.0" layoutY="225.0" stroke="#15aef1" strokeType="INSIDE" strokeWidth="5.0" width="50.0" />
-   <Rectangle fx:id="player2goalps" arcHeight="5.0" arcWidth="5.0" height="150.0" layoutX="750.0" layoutY="225.0" stroke="#15afe1" strokeType="INSIDE" strokeWidth="5.0" width="50.0" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="156.0" layoutY="220.0" strokeType="INSIDE" width="5.0" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="140.0" layoutX="795.0" layoutY="230.0" strokeType="INSIDE" width="5.0" />
+   <Rectangle fx:id="player1goalps" arcHeight="5.0" arcWidth="5.0" height="140.0" layoutY="225.0" strokeType="INSIDE" strokeWidth="5.0" width="50.0">
+      <stroke>
+         <LinearGradient cycleMethod="REPEAT" endX="1.0" endY="1.0">
+            <stops>
+               <Stop>
+                  <color>
+                     <Color red="0.026900583878159523" green="0.24210526049137115" blue="0.23851852118968964" />
+                  </color>
+               </Stop>
+               <Stop offset="0.9536585365853659">
+                  <color>
+                     <Color red="1.0" green="1.0" blue="1.0" />
+                  </color>
+               </Stop>
+               <Stop offset="1.0">
+                  <color>
+                     <Color red="0.054901961237192154" green="0.3333333432674408" blue="0.4117647111415863" />
+                  </color>
+               </Stop>
+            </stops>
+         </LinearGradient>
+      </stroke></Rectangle>
+   <Rectangle fx:id="player2goalps" arcHeight="5.0" arcWidth="5.0" height="150.0" layoutX="750.0" layoutY="225.0" strokeType="INSIDE" strokeWidth="5.0" width="50.0">
+      <stroke>
+         <LinearGradient cycleMethod="REPEAT" endX="1.0" endY="1.0">
+            <stops>
+               <Stop>
+                  <color>
+                     <Color red="1.0" green="0.7647058963775635" blue="0.12941177189350128" />
+                  </color>
+               </Stop>
+               <Stop offset="0.9536585365853659">
+                  <color>
+                     <Color red="0.9368420839309692" green="0.9368420839309692" blue="0.9368420839309692" />
+                  </color>
+               </Stop>
+               <Stop offset="1.0">
+                  <color>
+                     <Color red="1.0" green="0.7647058963775635" blue="0.12941177189350128" />
+                  </color>
+               </Stop>
+            </stops>
+         </LinearGradient>
+      </stroke></Rectangle>
+   <Rectangle arcHeight="5.0" arcWidth="5.0" height="156.0" layoutY="220.0" strokeType="INSIDE" width="5.0">
+      <fill>
+         <LinearGradient cycleMethod="REPEAT" endX="1.0" endY="1.0">
+            <stops>
+               <Stop>
+                  <color>
+                     <Color red="0.10869395732879639" green="0.28628069162368774" blue="0.43157893419265747" />
+                  </color>
+               </Stop>
+               <Stop offset="0.9536585365853659">
+                  <color>
+                     <Color red="0.03867446258664131" green="0.16842105984687805" blue="0.16842105984687805" />
+                  </color>
+               </Stop>
+               <Stop offset="1.0">
+                  <color>
+                     <Color red="2.729044936131686E-4" green="0.010526316240429878" blue="0.010355425998568535" />
+                  </color>
+               </Stop>
+            </stops>
+         </LinearGradient>
+      </fill></Rectangle>
+   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c7ba2a" height="140.0" layoutX="795.0" layoutY="230.0" strokeType="INSIDE" width="5.0" />
    <Circle fill="DODGERBLUE" layoutX="-75.0" layoutY="-67.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-   <Label fx:id="winText" alignment="CENTER" contentDisplay="RIGHT" layoutX="230.0" layoutY="292.0" prefHeight="51.0" prefWidth="340.0" textAlignment="CENTER" textFill="#ffff02">
+   <Label fx:id="winText" alignment="CENTER" contentDisplay="RIGHT" layoutX="239.0" layoutY="248.0" prefHeight="51.0" prefWidth="340.0" textAlignment="CENTER" textFill="#ffff02">
       <font>
          <Font name="Bookshelf Symbol 7" size="35.0" />
       </font>
@@ -40,15 +108,39 @@
       </effect>
    </Label>
 
-    <Button fx:id="slowOpponentButton" layoutX="230.0" layoutY="574.0" minHeight="34.0" minWidth="35.0" onAction="#handleSlowOpponentButtonClick" onMouseClicked="#handleSlowOpponentButtonClick" prefHeight="50.0" prefWidth="50.0" styleClass="circularslow-button" stylesheets="@../../../button.css" />
-   <Button layoutX="73.0" layoutY="574.0" maxWidth="46.0" minHeight="40.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClick" prefHeight="40.0" prefWidth="46.0" styleClass="circularfreeze-button" stylesheets="@../../../button.css" />
-   <Button layoutX="154.0" layoutY="574.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClick" styleClass="circulargoalpost-button" stylesheets="@../../../button.css" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="10.0" layoutX="-5.0" layoutY="370.0" strokeType="INSIDE" width="60.0" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="10.0" layoutX="-5.0" layoutY="220.0" strokeType="INSIDE" width="60.0" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fff0f1" height="10.0" layoutX="745.0" layoutY="225.0" strokeType="INSIDE" width="60.0" />
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="10.0" layoutX="745.0" layoutY="365.0" strokeType="INSIDE" width="60.0" />
-   <Button layoutX="533.0" layoutY="574.0" mnemonicParsing="false" onAction="#handleSlowOpponentButtonClickplay2" styleClass="circularslow-button" stylesheets="@../../../button.css" />
-   <Button layoutX="699.0" layoutY="574.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClickplay2" styleClass="circularfreeze-button" stylesheets="@../../../button.css" />
-   <Button layoutX="612.0" layoutY="574.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClickplay2" styleClass="circulargoalpost-button" stylesheets="@../../../button.css" />
-
+    <Button fx:id="slowOpponentButton" layoutX="230.0" layoutY="574.0" maxHeight="46.0" maxWidth="50.0" minHeight="39.0" minWidth="35.0" onAction="#handleSlowOpponentButtonClick" onMouseClicked="#handleSlowOpponentButtonClick" prefHeight="46.0" prefWidth="50.0" styleClass="circularslow-button" stylesheets="@../../../button.css" />
+   <Button fx:id="freeze1s" layoutX="73.0" layoutY="574.0" maxWidth="50.0" minHeight="40.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClick" prefHeight="40.0" prefWidth="50.0" styleClass="circularfreeze-button" stylesheets="@../../../button.css" />
+   <Button fx:id="goal1s" layoutX="150.0" layoutY="573.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClick" prefHeight="46.0" prefWidth="46.0" styleClass="circulargoalpost-button" stylesheets="@../../../button.css" />
+   <Rectangle fx:id="sidebar1" arcHeight="5.0" arcWidth="5.0" height="10.0" layoutX="-5.0" layoutY="370.0" strokeType="INSIDE" width="60.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" height="10.0" layoutX="-5.0" layoutY="220.0" strokeType="INSIDE" width="60.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" height="10.0" layoutX="745.0" layoutY="225.0" strokeType="INSIDE" width="50.0" />
+   <Rectangle arcHeight="5.0" arcWidth="5.0" height="10.0" layoutX="745.0" layoutY="365.0" strokeType="INSIDE" width="60.0" />
+   <Button fx:id="slow2s" layoutX="533.0" layoutY="574.0" mnemonicParsing="false" onAction="#handleSlowOpponentButtonClickplay2" styleClass="circularslow-button" stylesheets="@../../../button.css" />
+   <Button fx:id="freeze2s" layoutX="699.0" layoutY="574.0" mnemonicParsing="false" onAction="#handlefreezeOpponentButtonClickplay2" styleClass="circularfreeze-button" stylesheets="@../../../button.css" />
+   <Button fx:id="goal2s" layoutX="612.0" layoutY="574.0" mnemonicParsing="false" onAction="#handlegoalpostbarrierButtonClickplay2" styleClass="circulargoalpost-button" stylesheets="@../../../button.css" />
+   <ImageView fitHeight="150.0" fitWidth="134.0" layoutX="333.0" layoutY="472.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../../../timer.png" />
+      </image>
+   </ImageView>
+   <ImageView fitHeight="68.0" fitWidth="95.0" layoutX="-5.0" layoutY="340.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../../../borderblue.png" />
+      </image>
+   </ImageView>
+   <ImageView fitHeight="68.0" fitWidth="95.0" layoutX="-5.0" layoutY="194.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../../../borderblue.png" />
+      </image>
+   </ImageView>
+   <ImageView fitHeight="68.0" fitWidth="95.0" layoutX="727.0" layoutY="196.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../../../sidebaryellow.png" />
+      </image>
+   </ImageView>
+   <ImageView fitHeight="68.0" fitWidth="95.0" layoutX="727.0" layoutY="336.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../../../sidebaryellow.png" />
+      </image>
+   </ImageView>
 </AnchorPane>

@@ -41,7 +41,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/2-2/gpxlab/New folder/AeroBlitzSem4-4/src/main/resources",
+    "last_opened_file_path": "D:/2-2/gpxlab/New folder (7)/AeroBlitzSem4-4",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
@@ -50,6 +50,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\2-2\gpxlab\New folder (7)\AeroBlitzSem4-4\src\main\resources" />
+      <recent name="D:\2-2\gpxlab\New folder (7)\AeroBlitzSem4-4\src\main\resources\com\example\aeroblitz" />
       <recent name="D:\2-2\gpxlab\New folder\AeroBlitzSem4-4\src\main\resources" />
       <recent name="D:\2-2\gpxlab\New folder\AeroBlitzSem4-4\src\main\resources\com\example\aeroblitz" />
     </key>
@@ -63,6 +65,21 @@
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.example.aeroblitz" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="AeroBlitzSem4-4" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="AeroBlitzSem4-4" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -90,5 +107,29 @@
     </ignored-roots>
     <MESSAGE value="timer" />
     <option name="LAST_COMMIT_MESSAGE" value="timer" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Board.java</url>
+          <line>2328</line>
+          <properties class="com.example.aeroblitz.Board" method="handleSlowOpponentButtonClickplay2">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/aeroblitz/Board.java</url>
+          <line>1862</line>
+          <properties class="com.example.aeroblitz.Board" method="handleSlowOpponentButtonClick">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
